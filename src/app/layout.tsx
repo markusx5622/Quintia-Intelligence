@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import './globals.css';
-import AppHeader from '@/src/components/AppHeader';
 
 export const metadata: Metadata = {
   title: 'QUINTIA — Process Intelligence',
@@ -11,17 +11,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <AppHeader />
-
-        {/* ── Main Content Area ── */}
-        <main
-          style={{
-            maxWidth: 1080,
-            margin: '0 auto',
-            padding: '40px 32px 64px',
-            minHeight: 'calc(100vh - 56px)',
-          }}
-        >
+        <nav className="q-nav">
+          <div className="q-nav-inner">
+            <Link href="/" className="q-nav-logo">
+              <span className="q-nav-logo-mark">Q</span>
+              QUINTIA
+            </Link>
+            <div className="q-nav-separator" />
+            <Link href="/projects" className="q-nav-link">Projects</Link>
+            <Link href="/projects/new" className="q-nav-link">New Analysis</Link>
+            <div style={{ flex: 1 }} />
+            <span className="q-nav-tag">Process Intelligence</span>
+          </div>
+        </nav>
+        <main className="q-page-shell">
           {children}
         </main>
       </body>

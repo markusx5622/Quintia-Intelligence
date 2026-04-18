@@ -1,127 +1,49 @@
 import type { DiagnosticsOutput } from '@/src/lib/types/contracts';
 
-const SEVERITY_COLORS: Record<string, string> = {
-  critical: '#ef4444',
-  high: '#f97316',
-  medium: '#f59e0b',
-  low: '#3b82f6',
-};
-
-const SEVERITY_BG: Record<string, string> = {
-  critical: 'rgba(239,68,68,0.06)',
-  high: 'rgba(249,115,22,0.06)',
-  medium: 'rgba(245,158,11,0.06)',
-  low: 'rgba(59,130,246,0.06)',
-};
-
-const SEVERITY_ICONS: Record<string, string> = {
-  critical: '⬢',
-  high: '◆',
-  medium: '▲',
-  low: '●',
+const SEVERITY_META: Record<string, { color: string; bg: string; icon: string }> = {
+  critical: { color: 'var(--q-danger-600)', bg: 'var(--q-danger-50)', icon: '🔴' },
+  high: { color: 'var(--q-orange-600)', bg: 'var(--q-orange-100)', icon: '🟠' },
+  medium: { color: 'var(--q-warning-600)', bg: 'var(--q-warning-50)', icon: '🟡' },
+  low: { color: 'var(--q-accent-500)', bg: 'var(--q-accent-50)', icon: '🔵' },
 };
 
 export default function DiagnosticsPanel({ data }: { data: DiagnosticsOutput }) {
   return (
     <div>
-      <p style={{ color: '#94a3b8', marginBottom: 20, fontSize: 14, lineHeight: 1.6, margin: '0 0 20px' }}>
+      <p style={{ color: 'var(--q-slate-500)', marginBottom: 20, fontSize: 14, lineHeight: 1.6 }}>
         {data.summary}
       </p>
 
-      {/* Severity summary bar */}
-      {data.issues.length > 0 && (
-        <div style={{ display: 'flex', gap: 16, marginBottom: 20, flexWrap: 'wrap' }}>
-          {(['critical', 'high', 'medium', 'low'] as const).map((sev) => {
-            const count = data.issues.filter((i) => i.severity === sev).length;
-            if (count === 0) return null;
-            const color = SEVERITY_COLORS[sev];
-            return (
-              <div key={sev} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span
-                  style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    background: color,
-                  }}
-                />
-                <span style={{ fontSize: 12, color: '#94a3b8' }}>
-                  <strong style={{ color }}>{count}</strong> {sev}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {data.issues.map((issue, i) => {
-          const color = SEVERITY_COLORS[issue.severity] || '#64748b';
-          const bg = SEVERITY_BG[issue.severity] || 'transparent';
-          const icon = SEVERITY_ICONS[issue.severity] || '●';
-
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 20 }}>
+        {(['critical', 'high', 'medium', 'low'] as const).map((sev) => {
+          const count = data.issues.filter((i) => i.severity === sev).length;
+          if (count === 0) return null;
+          const meta = SEVERITY_META[sev];
           return (
-            <div
-              key={i}
-              className={`q-animate-slide q-stagger-${Math.min(i + 1, 7)}`}
-              style={{
-                padding: '16px 18px',
-                borderLeft: `3px solid ${color}`,
-                background: bg,
-                borderRadius: '0 10px 10px 0',
-                border: `1px solid rgba(51,65,85,0.15)`,
-                borderLeftWidth: 3,
-                borderLeftColor: color,
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  marginBottom: 8,
-                }}
-              >
-                <span style={{ fontSize: 10, color }}>{icon}</span>
-                <span
-                  style={{
-                    fontSize: 9,
-                    fontWeight: 700,
-                    padding: '2px 8px',
-                    borderRadius: 4,
-                    background: `${color}18`,
-                    color,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                  }}
-                >
-                  {issue.severity}
-                </span>
-                <span
-                  style={{
-                    fontWeight: 600,
-                    color: '#e2e8f0',
-                    fontSize: 14,
-                  }}
-                >
-                  {issue.title}
-                </span>
-              </div>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 13,
-                  color: '#94a3b8',
-                  lineHeight: 1.5,
-                  paddingLeft: 20,
-                }}
-              >
-                {issue.evidence}
-              </p>
-            </div>
+            <span key={sev} className="q-badge" style={{ background: meta.bg, color: meta.color }}>
+              {meta.icon} {count} {sev}
+            </span>
           );
         })}
       </div>
+
+      {data.issues.map((issue, i) => {
+        const meta = SEVERITY_META[issue.severity] || SEVERITY_META.low;
+        return (
+          <div key={i} className="q-diag-card">
+            <div className="q-diag-severity-dot" style={{ background: meta.color }} title={issue.severity} />
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                <span className="q-diag-title">{issue.title}</span>
+                <span className="q-badge" style={{ background: meta.bg, color: meta.color, fontSize: 10 }}>
+                  {issue.severity}
+                </span>
+              </div>
+              <div className="q-diag-evidence">{issue.evidence}</div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

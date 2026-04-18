@@ -16,76 +16,40 @@ export default async function ProjectDetailPage({
   if (!project) return notFound();
 
   return (
-    <div className="q-animate-in">
-      {/* Breadcrumb */}
-      <div style={{ marginBottom: 24 }}>
-        <Link
-          href="/projects"
-          style={{
-            fontSize: 12,
-            color: '#64748b',
-            textDecoration: 'none',
-            transition: 'color 150ms',
-          }}
-        >
-          ← Back to Projects
+    <div>
+      <div className="q-breadcrumb">
+        <Link href="/projects">Projects</Link>
+        <span className="q-breadcrumb-sep" />
+        <span>{project.name}</span>
+      </div>
+
+      <div className="q-page-header" style={{ marginBottom: 32 }}>
+        <div className="q-page-header-left">
+          <h1 className="q-page-title">{project.name}</h1>
+          {project.description && (
+            <span className="q-page-subtitle">{project.description}</span>
+          )}
+        </div>
+      </div>
+
+      <div className="q-card" style={{ marginBottom: 32 }}>
+        <div className="q-card-header">
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--q-navy-800)', letterSpacing: '0.02em' }}>
+            📄 Process Narrative
+          </div>
+        </div>
+        <div className="q-card-body">
+          <div className="q-narrative-block">
+            {project.narrative}
+          </div>
+        </div>
+      </div>
+
+      <p style={{ color: 'var(--q-slate-500)', fontSize: 14 }}>
+        Pipeline jobs are linked at creation time.{' '}
+        <Link href="/projects" style={{ color: 'var(--q-accent-500)', textDecoration: 'none', fontWeight: 500 }}>
+          ← Back to projects
         </Link>
-      </div>
-
-      <h1
-        style={{
-          margin: '0 0 8px',
-          fontSize: 24,
-          fontWeight: 700,
-          color: '#f1f5f9',
-          letterSpacing: '-0.01em',
-        }}
-      >
-        {project.name}
-      </h1>
-      {project.description && (
-        <p style={{ color: '#94a3b8', margin: '0 0 24px', fontSize: 14 }}>
-          {project.description}
-        </p>
-      )}
-
-      {/* Narrative Panel */}
-      <div
-        style={{
-          padding: '24px',
-          background: 'rgba(15,23,42,0.6)',
-          border: '1px solid rgba(51,65,85,0.3)',
-          borderRadius: 12,
-          marginBottom: 24,
-        }}
-      >
-        <h3
-          style={{
-            margin: '0 0 12px',
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            color: '#64748b',
-          }}
-        >
-          Process Narrative
-        </h3>
-        <p
-          style={{
-            margin: 0,
-            color: '#cbd5e1',
-            lineHeight: 1.7,
-            fontSize: 14,
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {project.narrative}
-        </p>
-      </div>
-
-      <p style={{ color: '#64748b', fontSize: 13 }}>
-        Pipeline jobs are linked at creation time.
       </p>
     </div>
   );
