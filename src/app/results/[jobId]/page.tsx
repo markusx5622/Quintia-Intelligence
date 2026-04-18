@@ -1,24 +1,63 @@
+'use client';
+
+import { use, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getStorage } from '@/src/lib/storage/factory';
-import { notFound } from 'next/navigation';
 import FinancialCards from '@/src/components/FinancialCards';
 import ProcessGraphView from '@/src/components/ProcessGraphView';
 import DiagnosticsPanel from '@/src/components/DiagnosticsPanel';
 import ExecutiveSynthesisCard from '@/src/components/ExecutiveSynthesisCard';
 import type { PipelineResult } from '@/src/lib/types/contracts';
 
-export const dynamic = 'force-dynamic';
-
-export default async function ResultsPage({
+export default function ResultsPage({
   params,
 }: {
   params: Promise<{ jobId: string }>;
 }) {
-  const { jobId } = await params;
-  const storage = getStorage();
-  const result: PipelineResult | null = await storage.getFullResult(jobId);
+  const { jobId } = use(params);
+  const [result, setResult] = useState<PipelineResult | null>(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  if (!result) return notFound();
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetch(`/api/results/${jobId}`, { signal: controller.signal })
+      .then(async (res) => {
+        if (res.status === 404) throw new Error('Results not found');
+        if (!res.ok) throw new Error('Failed to load results');
+        return res.json() as Promise<PipelineResult>;
+      })
+      .then((data) => {
+        setResult(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err instanceof Error && err.name === 'AbortError') return;
+        setError(err instanceof Error ? err.message : 'Failed to load results');
+        setLoading(false);
+      });
+
+    return () => controller.abort();
+  }, [jobId]);
+
+  if (loading) {
+    return <div style={{ color: '#64748b' }}>Loading results...</div>;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <div style={{ color: '#dc2626', marginBottom: 16 }}>Error: {error}</div>
+        <Link href={`/pipeline/${jobId}`} style={{ color: '#1e40af', textDecoration: 'none', fontSize: 14 }}>
+          ← Back to Pipeline Status
+        </Link>
+      </div>
+    );
+  }
+
+  if (!result) {
+    return <div style={{ color: '#64748b' }}>No results available.</div>;
+  }
 
   return (
     <div>
