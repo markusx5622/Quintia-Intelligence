@@ -153,7 +153,7 @@ export function buildProcessGraph(narrative: string): ProcessGraphOutput {
         currentGroup.push(branchIndices[idx]);
       } else {
         groups.push(currentGroup);
-        currentGroup = [branchIndices[g]];
+        currentGroup = [branchIndices[idx]];
       }
     }
     groups.push(currentGroup);
