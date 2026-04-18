@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'QUINTIA — Process Intelligence',
@@ -8,16 +10,21 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', color: '#1e293b', background: '#f8fafc' }}>
-        <nav style={{ background: '#1e293b', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: 24 }}>
-          <a href="/" style={{ color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: 18 }}>
-            QUINTIA
-          </a>
-          <a href="/projects" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: 14 }}>
-            Projects
-          </a>
+      <body>
+        <nav className="q-nav">
+          <div className="q-nav-inner">
+            <Link href="/" className="q-nav-logo">
+              <span className="q-nav-logo-mark">Q</span>
+              QUINTIA
+            </Link>
+            <div className="q-nav-separator" />
+            <Link href="/projects" className="q-nav-link">Projects</Link>
+            <Link href="/projects/new" className="q-nav-link">New Analysis</Link>
+            <div style={{ flex: 1 }} />
+            <span className="q-nav-tag">Process Intelligence</span>
+          </div>
         </nav>
-        <main style={{ maxWidth: 960, margin: '0 auto', padding: '32px 24px' }}>
+        <main className="q-page-shell">
           {children}
         </main>
       </body>

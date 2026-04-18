@@ -17,22 +17,38 @@ export default async function ProjectDetailPage({
 
   return (
     <div>
-      <h1 style={{ marginBottom: 8 }}>{project.name}</h1>
-      {project.description && (
-        <p style={{ color: '#64748b', marginBottom: 16 }}>{project.description}</p>
-      )}
-
-      <div style={{ padding: '16px 20px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, marginBottom: 24 }}>
-        <h3 style={{ margin: '0 0 8px', fontSize: 14, color: '#64748b' }}>Process Narrative</h3>
-        <p style={{ margin: 0, color: '#334155', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
-          {project.narrative}
-        </p>
+      <div className="q-breadcrumb">
+        <Link href="/projects">Projects</Link>
+        <span className="q-breadcrumb-sep" />
+        <span>{project.name}</span>
       </div>
 
-      <p style={{ color: '#64748b', fontSize: 14 }}>
+      <div className="q-page-header" style={{ marginBottom: 32 }}>
+        <div className="q-page-header-left">
+          <h1 className="q-page-title">{project.name}</h1>
+          {project.description && (
+            <span className="q-page-subtitle">{project.description}</span>
+          )}
+        </div>
+      </div>
+
+      <div className="q-card" style={{ marginBottom: 32 }}>
+        <div className="q-card-header">
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--q-navy-800)', letterSpacing: '0.02em' }}>
+            📄 Process Narrative
+          </div>
+        </div>
+        <div className="q-card-body">
+          <div className="q-narrative-block">
+            {project.narrative}
+          </div>
+        </div>
+      </div>
+
+      <p style={{ color: 'var(--q-slate-500)', fontSize: 14 }}>
         Pipeline jobs are linked at creation time.{' '}
-        <Link href="/projects" style={{ color: '#1e40af' }}>
-          Back to projects
+        <Link href="/projects" style={{ color: 'var(--q-accent-500)', textDecoration: 'none', fontWeight: 500 }}>
+          ← Back to projects
         </Link>
       </p>
     </div>

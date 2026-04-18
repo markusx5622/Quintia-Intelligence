@@ -9,47 +9,48 @@ export default async function ProjectsPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>Projects</h1>
-        <Link
-          href="/projects/new"
-          style={{
-            padding: '8px 20px',
-            background: '#1e40af',
-            color: '#fff',
-            textDecoration: 'none',
-            borderRadius: 6,
-            fontWeight: 600,
-            fontSize: 14,
-          }}
-        >
+      <div className="q-page-header">
+        <div className="q-page-header-left">
+          <h1 className="q-page-title">Projects</h1>
+          <span className="q-page-subtitle">{projects.length} project{projects.length !== 1 ? 's' : ''} created</span>
+        </div>
+        <Link href="/projects/new" className="q-btn q-btn-primary">
           + New Project
         </Link>
       </div>
 
       {projects.length === 0 ? (
-        <p style={{ color: '#64748b' }}>No projects yet. Create your first one.</p>
+        <div className="q-empty-state">
+          <div className="q-empty-state-icon">📂</div>
+          <p style={{ fontSize: 16, fontWeight: 500, color: 'var(--q-navy-700)', marginBottom: 8 }}>
+            No projects yet
+          </p>
+          <p style={{ fontSize: 14, color: 'var(--q-slate-400)', marginBottom: 20 }}>
+            Create your first project to begin process analysis.
+          </p>
+          <Link href="/projects/new" className="q-btn q-btn-primary">
+            Start New Analysis
+          </Link>
+        </div>
       ) : (
         <div>
           {projects.map((p) => (
-            <Link
-              key={p.id}
-              href={`/projects/${p.id}`}
-              style={{
-                display: 'block',
-                padding: '16px 20px',
-                background: '#fff',
-                border: '1px solid #e2e8f0',
-                borderRadius: 8,
-                marginBottom: 8,
-                textDecoration: 'none',
-                color: 'inherit',
-              }}
-            >
-              <div style={{ fontWeight: 600, marginBottom: 4 }}>{p.name}</div>
-              {p.description && <div style={{ fontSize: 13, color: '#64748b' }}>{p.description}</div>}
-              <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>
-                Created: {new Date(p.createdAt).toLocaleDateString()}
+            <Link key={p.id} href={`/projects/${p.id}`} className="q-project-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--q-navy-900)', marginBottom: 4 }}>
+                    {p.name}
+                  </div>
+                  {p.description && (
+                    <div style={{ fontSize: 13, color: 'var(--q-slate-500)', marginBottom: 6 }}>
+                      {p.description}
+                    </div>
+                  )}
+                </div>
+                <span style={{ fontSize: 18, color: 'var(--q-slate-300)' }}>›</span>
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--q-slate-400)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span>📅</span> Created {new Date(p.createdAt).toLocaleDateString()}
               </div>
             </Link>
           ))}
