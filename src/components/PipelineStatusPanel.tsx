@@ -23,7 +23,7 @@ function StageRow({ record, index, visibleCount }: { record: StageRecord; index:
 
   return (
     <div
-      className={`q-pipeline-stage ${isActive ? 'q-pipeline-stage--active' : ''}`}
+      className={`q-pipeline-stage ${isActive ? 'q-pipeline-stage--active' : ''} ${isCompleted ? 'q-pipeline-stage--completed' : ''}`}
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0)' : 'translateY(12px)',

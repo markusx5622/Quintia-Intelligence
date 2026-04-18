@@ -4,40 +4,40 @@ const CAPABILITIES = [
   {
     icon: '⚙️',
     title: 'Process Intelligence',
-    desc: 'Automatically extract structured process models from unstructured operational narratives. Map roles, systems, artifacts, and decision points into analyzable graph representations.',
+    desc: 'Extract structured process models from unstructured operational narratives. Map roles, systems, artifacts, and decision points into analyzable graph representations.',
   },
   {
     icon: '🔍',
     title: 'Diagnostics & Evidence',
-    desc: 'Identify bottlenecks, compliance gaps, redundancies, and risk hotspots. Every diagnostic finding is anchored to specific evidence from the source narrative.',
+    desc: 'Identify bottlenecks, compliance gaps, redundancies, and risk hotspots — each finding anchored to specific evidence from the source narrative.',
   },
   {
     icon: '📊',
     title: 'Scenario Comparison',
-    desc: 'Model alternative process designs and compare them against the baseline across cost, time, quality, and risk dimensions — all with deterministic projections.',
+    desc: 'Model alternative process designs and compare them against the current baseline across cost, time, quality, and risk — all with deterministic projections.',
   },
   {
     icon: '💰',
     title: 'Financial Projections',
-    desc: 'Generate structured ROI, savings, implementation cost, and payback analysis. Fully deterministic — no probabilistic guesswork, no hidden AI-generated estimates.',
+    desc: 'Generate structured ROI, savings, and payback analysis. Fully deterministic — no probabilistic guesswork, no hidden AI-generated estimates.',
   },
 ];
 
 const STEPS = [
   {
     num: '01',
-    title: 'Submit Process Narrative',
-    desc: 'Describe an operational process in natural language — as written documentation, interview transcripts, or workflow descriptions.',
+    title: 'Describe Your Process',
+    desc: 'Submit an operational process narrative — documentation, interview transcripts, or workflow descriptions in natural language.',
   },
   {
     num: '02',
-    title: 'Automated Analysis Pipeline',
-    desc: 'Quintia runs a multi-stage internal pipeline: extraction, diagnostics, scenario generation, financial projection, synthesis, and critic review.',
+    title: 'Automated Analysis',
+    desc: 'Quintia executes a 7-stage internal pipeline: ontology extraction, graph construction, diagnostics, scenario generation, financial projection, critic review, and synthesis.',
   },
   {
     num: '03',
-    title: 'Structured Intelligence Output',
-    desc: 'Receive process graphs, diagnostics with evidence, scenario comparisons, financial projections, and executive synthesis — all deterministic and traceable.',
+    title: 'Actionable Intelligence',
+    desc: 'Receive process graphs, evidence-linked diagnostics, scenario comparisons, deterministic financial projections, and executive synthesis — fully traceable.',
   },
 ];
 
@@ -45,21 +45,21 @@ const TRUST_PILLARS = [
   {
     icon: '🏗️',
     title: 'Internal-First Engine',
-    desc: 'All analysis runs inside Quintia\u2019s own engine. No external AI providers, no third-party orchestration. Your data stays within your boundary.',
+    desc: 'All analysis runs inside Quintia\u2019s own processing engine. No external AI providers, no third-party orchestration. Your data stays within your boundary.',
   },
   {
     icon: '🧮',
-    title: 'Deterministic Financials',
-    desc: 'Financial projections use a deterministic calculation layer with explicit formulas and auditable inputs. No black-box estimates.',
+    title: 'Deterministic Financial Layer',
+    desc: 'Financial projections use explicit deterministic formulas with auditable inputs. Every number is reproducible and traceable — no black-box estimates.',
   },
   {
     icon: '📎',
-    title: 'Evidence-Linked Diagnostics',
-    desc: 'Every finding, issue, and recommendation traces back to specific evidence from the source narrative. Full explainability, no hallucination.',
+    title: 'Evidence-Linked Findings',
+    desc: 'Every diagnostic, issue, and recommendation traces back to specific evidence from the source narrative. Full explainability by design.',
   },
   {
     icon: '📋',
-    title: 'Structured Outputs',
+    title: 'Typed Structured Outputs',
     desc: 'All outputs follow strict typed contracts — process graphs, diagnostics, scenarios, financials, synthesis. Machine-readable, auditable, reproducible.',
   },
 ];
@@ -67,7 +67,7 @@ const TRUST_PILLARS = [
 const USE_CASES = [
   {
     icon: '🏭',
-    label: 'Manufacturing',
+    label: 'Industrial Operations',
     examples: 'Production line optimization, quality control workflows, maintenance scheduling',
   },
   {
@@ -92,9 +92,16 @@ const USE_CASES = [
   },
   {
     icon: '🔧',
-    label: 'Professional Services',
-    examples: 'Client onboarding, project delivery, audit processes',
+    label: 'IT & Professional Services',
+    examples: 'Incident management, client onboarding, project delivery, audit workflows',
   },
+];
+
+const STATS = [
+  { value: '7', label: 'Pipeline Stages' },
+  { value: '100%', label: 'Deterministic' },
+  { value: '0', label: 'External Dependencies' },
+  { value: '∞', label: 'Reproducibility' },
 ];
 
 export default function HomePage() {
@@ -106,20 +113,20 @@ export default function HomePage() {
         <h1 className="q-hero-title">QUINTIA</h1>
         <p className="q-hero-subtitle">
           Transform operational narratives into structured process models,
-          diagnostics, and deterministic financial projections — with full
-          evidence traceability and zero external dependencies.
+          evidence-linked diagnostics, and deterministic financial projections —
+          with full traceability and zero external dependencies.
         </p>
         <div className="q-hero-actions">
-          <Link href="/projects/new" className="q-btn q-btn-primary" style={{ fontSize: 16, padding: '16px 40px' }}>
+          <Link href="/projects/new" className="q-btn q-btn-primary" style={{ fontSize: 16, padding: '16px 44px' }}>
             Start New Analysis
           </Link>
-          <Link href="/projects" className="q-btn q-btn-ghost" style={{ fontSize: 16, padding: '16px 40px' }}>
+          <Link href="/projects" className="q-btn q-btn-ghost" style={{ fontSize: 15, padding: '15px 36px' }}>
             View Projects
           </Link>
         </div>
 
         {/* Dashboard preview visual */}
-        <div className="q-hero-visual">
+        <div className="q-hero-visual q-animate-in-up" style={{ animationDelay: '200ms' }}>
           <div className="q-hero-visual-inner">
             <div className="q-hero-visual-row">
               {['Baseline Cost', 'Expected Savings', 'ROI', 'Payback'].map((label) => (
@@ -135,8 +142,39 @@ export default function HomePage() {
               <div className="q-hero-visual-node" />
               <div className="q-hero-visual-edge" />
               <div className="q-hero-visual-node" />
+              <div className="q-hero-visual-edge" />
+              <div className="q-hero-visual-node" />
             </div>
           </div>
+        </div>
+
+        {/* Stats bar */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: 48,
+          marginTop: 48,
+          flexWrap: 'wrap',
+        }}>
+          {STATS.map((stat) => (
+            <div key={stat.label} className="q-animate-in" style={{ textAlign: 'center', animationDelay: '300ms' }}>
+              <div style={{
+                fontSize: 28,
+                fontWeight: 800,
+                color: 'var(--q-white)',
+                letterSpacing: '-0.02em',
+                fontVariantNumeric: 'tabular-nums',
+              }}>{stat.value}</div>
+              <div style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: 'var(--q-slate-500)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                marginTop: 4,
+              }}>{stat.label}</div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -144,17 +182,17 @@ export default function HomePage() {
       <section className="q-landing-section">
         <div className="q-landing-section-header">
           <span className="q-landing-eyebrow">Capabilities</span>
-          <h2 className="q-landing-heading">What Quintia Does</h2>
+          <h2 className="q-landing-heading">What Quintia Delivers</h2>
           <p className="q-landing-subheading">
             A complete process intelligence pipeline — from unstructured narratives to structured, auditable, actionable outputs.
           </p>
         </div>
         <div className="q-landing-grid-4">
-          {CAPABILITIES.map((cap) => (
-            <div key={cap.title} className="q-landing-card">
-              <div className="q-landing-card-icon">{cap.icon}</div>
-              <h3 className="q-landing-card-title">{cap.title}</h3>
-              <p className="q-landing-card-desc">{cap.desc}</p>
+          {CAPABILITIES.map((capability, i) => (
+            <div key={capability.title} className={`q-landing-card q-animate-in q-stagger-${i + 1}`}>
+              <div className="q-landing-card-icon">{capability.icon}</div>
+              <h3 className="q-landing-card-title">{capability.title}</h3>
+              <p className="q-landing-card-desc">{capability.desc}</p>
             </div>
           ))}
         </div>
@@ -171,13 +209,13 @@ export default function HomePage() {
         </div>
         <div className="q-landing-steps">
           {STEPS.map((step, i) => (
-            <div key={step.num} className="q-landing-step">
+            <div key={step.num} className={`q-landing-step q-animate-in q-stagger-${i + 1}`}>
               <div className="q-landing-step-num">{step.num}</div>
               <div className="q-landing-step-content">
                 <h3 className="q-landing-step-title">{step.title}</h3>
                 <p className="q-landing-step-desc">{step.desc}</p>
               </div>
-              {i < STEPS.length - 1 && <div className="q-landing-step-connector" />}
+              {i < STEPS.length - 1 && <div className="q-landing-step-connector" aria-hidden="true" />}
             </div>
           ))}
         </div>
@@ -194,8 +232,8 @@ export default function HomePage() {
           </p>
         </div>
         <div className="q-landing-grid-2">
-          {TRUST_PILLARS.map((pillar) => (
-            <div key={pillar.title} className="q-landing-trust-card">
+          {TRUST_PILLARS.map((pillar, i) => (
+            <div key={pillar.title} className={`q-landing-trust-card q-animate-in q-stagger-${i + 1}`}>
               <div className="q-landing-trust-icon">{pillar.icon}</div>
               <div>
                 <h3 className="q-landing-trust-title">{pillar.title}</h3>
@@ -212,17 +250,17 @@ export default function HomePage() {
           <span className="q-landing-eyebrow">Applications</span>
           <h2 className="q-landing-heading">Built for Complex Operations</h2>
           <p className="q-landing-subheading">
-            Quintia is designed for organizations where process understanding drives operational,
+            Designed for organizations where process understanding drives operational,
             financial, and strategic decisions.
           </p>
         </div>
         <div className="q-landing-grid-3">
-          {USE_CASES.map((uc) => (
-            <div key={uc.label} className="q-landing-usecase">
-              <span className="q-landing-usecase-icon">{uc.icon}</span>
+          {USE_CASES.map((useCase, i) => (
+            <div key={useCase.label} className={`q-landing-usecase q-animate-in q-stagger-${i + 1}`}>
+              <span className="q-landing-usecase-icon">{useCase.icon}</span>
               <div>
-                <div className="q-landing-usecase-label">{uc.label}</div>
-                <div className="q-landing-usecase-examples">{uc.examples}</div>
+                <div className="q-landing-usecase-label">{useCase.label}</div>
+                <div className="q-landing-usecase-examples">{useCase.examples}</div>
               </div>
             </div>
           ))}
@@ -235,8 +273,8 @@ export default function HomePage() {
           Ready to understand your processes?
         </h2>
         <p className="q-landing-cta-subtitle">
-          Start with a single narrative. Get structured process intelligence,
-          diagnostics, and financial projections in minutes.
+          Submit a single narrative. Receive structured process intelligence,
+          evidence-linked diagnostics, and deterministic financial projections — in minutes.
         </p>
         <div className="q-hero-actions">
           <Link href="/projects/new" className="q-btn q-btn-primary" style={{ fontSize: 16, padding: '16px 44px' }}>
@@ -249,7 +287,7 @@ export default function HomePage() {
       </section>
 
       {/* ============ FOOTER ============ */}
-      <footer className="q-landing-footer">
+      <footer className="q-landing-footer" role="contentinfo">
         <div className="q-landing-footer-inner">
           <div className="q-landing-footer-brand">
             <span className="q-nav-logo-mark" style={{ width: 28, height: 28, fontSize: 12 }}>Q</span>

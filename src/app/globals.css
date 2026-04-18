@@ -2331,3 +2331,553 @@ details[open] > .q-scenario-assumptions-toggle::before {
   color: var(--q-slate-500);
   margin-top: 8px;
 }
+
+/* ============================================================================
+   PRODUCT FINISH PASS — Animations, Polish & Responsive Hardening
+   ============================================================================ */
+
+/* --- 1. Fade-In Animations for Sections & Cards --- */
+
+@keyframes q-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes q-fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes q-fade-in-scale {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.q-animate-in {
+  animation: q-fade-in 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.q-animate-in-up {
+  animation: q-fade-in-up 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.q-animate-in-scale {
+  animation: q-fade-in-scale 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Stagger delays for sequential card appearance */
+.q-stagger-1 { animation-delay: 50ms; }
+.q-stagger-2 { animation-delay: 100ms; }
+.q-stagger-3 { animation-delay: 150ms; }
+.q-stagger-4 { animation-delay: 200ms; }
+.q-stagger-5 { animation-delay: 250ms; }
+.q-stagger-6 { animation-delay: 300ms; }
+
+/* --- 2. Skeleton Loading States --- */
+
+@keyframes q-skeleton-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.q-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--q-surface-2) 0%,
+    var(--q-surface-3) 40%,
+    var(--q-surface-2) 80%
+  );
+  background-size: 800px 100%;
+  animation: q-skeleton-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--q-radius-md);
+  color: transparent !important;
+  pointer-events: none;
+  user-select: none;
+}
+
+.q-skeleton * {
+  visibility: hidden;
+}
+
+.q-skeleton-text {
+  height: 14px;
+  border-radius: var(--q-radius-sm);
+  margin-bottom: var(--q-space-2);
+}
+
+.q-skeleton-text-lg {
+  height: 20px;
+  width: 60%;
+  border-radius: var(--q-radius-sm);
+  margin-bottom: var(--q-space-3);
+}
+
+.q-skeleton-circle {
+  border-radius: var(--q-radius-full);
+}
+
+.q-skeleton-card {
+  min-height: 120px;
+  border-radius: var(--q-radius-xl);
+  border: 1px solid var(--q-border-subtle);
+}
+
+/* --- 3. Empty State Refinements --- */
+
+.q-empty-state-refined {
+  text-align: center;
+  padding: var(--q-space-16) var(--q-space-8);
+  color: var(--q-slate-400);
+  border: 1px dashed var(--q-border-default);
+  border-radius: var(--q-radius-xl);
+  background: var(--q-surface-1);
+}
+
+.q-empty-state-refined-icon {
+  font-size: 48px;
+  margin-bottom: var(--q-space-5);
+  opacity: 0.35;
+  filter: grayscale(0.3);
+}
+
+.q-empty-state-refined-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--q-slate-300);
+  margin-bottom: var(--q-space-2);
+}
+
+.q-empty-state-refined-desc {
+  font-size: 13px;
+  color: var(--q-slate-500);
+  max-width: 360px;
+  margin: 0 auto var(--q-space-6);
+  line-height: 1.6;
+}
+
+/* --- 4. Page Transition Helpers --- */
+
+@keyframes q-page-enter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.q-page-transition {
+  animation: q-page-enter 250ms ease both;
+}
+
+.q-page-content-enter {
+  animation: q-fade-in 350ms cubic-bezier(0.4, 0, 0.2, 1) 60ms both;
+}
+
+/* --- 5. Responsive Hardening --- */
+
+@media (max-width: 768px) {
+  .q-scenario-baseline {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .q-scenario-baseline-divider {
+    display: none;
+  }
+
+  .q-scenario-baseline-item {
+    flex: 1 1 calc(50% - 12px);
+    min-width: 100px;
+  }
+
+  .q-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--q-space-4);
+  }
+
+  .q-selection-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .q-selection-bar-clear {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .q-hero-title {
+    font-size: clamp(28px, 8vw, 48px);
+    letter-spacing: 0.04em;
+  }
+
+  .q-confidence-ring {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+@media (max-width: 480px) {
+  .q-scenario-baseline-item {
+    flex: 1 1 100%;
+  }
+
+  .q-hero-title {
+    font-size: clamp(24px, 7vw, 36px);
+  }
+
+  .q-confidence-ring {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+/* --- 6. Button Press States --- */
+
+.q-btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+  transition-duration: 80ms;
+}
+
+.q-btn-primary:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 1px 4px rgba(37,99,235,0.2);
+}
+
+.q-btn-success:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 1px 4px rgba(22,163,74,0.2);
+}
+
+.q-btn-ghost:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+  background: var(--q-surface-2);
+}
+
+/* --- 7. Focus-Visible Improvements --- */
+
+.q-btn:focus-visible {
+  outline: 2px solid var(--q-cyan-400);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(6,182,212,0.15);
+}
+
+.q-card:focus-visible,
+.q-card[tabindex]:focus-visible {
+  outline: 2px solid var(--q-cyan-400);
+  outline-offset: 1px;
+  box-shadow: var(--q-shadow-glow-cyan);
+}
+
+.q-input:focus-visible,
+.q-textarea:focus-visible {
+  outline: 2px solid var(--q-cyan-400);
+  outline-offset: 1px;
+}
+
+.q-graph-node:focus-visible,
+.q-graph-node--interactive:focus-visible {
+  outline: 2px solid var(--q-cyan-400);
+  outline-offset: 1px;
+  box-shadow: var(--q-shadow-glow-cyan);
+}
+
+.q-scenario-card:focus-visible {
+  outline: 2px solid var(--q-cyan-400);
+  outline-offset: 1px;
+  box-shadow: var(--q-shadow-glow-cyan);
+}
+
+.q-selection-bar-clear:focus-visible {
+  outline: 2px solid var(--q-cyan-400);
+  outline-offset: 1px;
+}
+
+/* --- 8. Smooth Scroll --- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* --- 9. Prefers Reduced Motion --- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .q-animate-in,
+  .q-animate-in-up,
+  .q-animate-in-scale,
+  .q-page-transition,
+  .q-page-content-enter,
+  .q-reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .q-skeleton {
+    animation: none;
+  }
+}
+
+/* --- 10. Premium Status Indicators --- */
+
+.q-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 5px 14px;
+  border-radius: var(--q-radius-full);
+  border: 1px solid transparent;
+}
+
+.q-status-indicator::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: var(--q-radius-full);
+  flex-shrink: 0;
+}
+
+.q-status-indicator--active {
+  background: rgba(34,197,94,0.1);
+  color: var(--q-success-400);
+  border-color: rgba(34,197,94,0.2);
+}
+
+.q-status-indicator--active::before {
+  background: var(--q-success-400);
+  box-shadow: 0 0 6px rgba(34,197,94,0.4);
+}
+
+.q-status-indicator--pending {
+  background: rgba(234,179,8,0.1);
+  color: var(--q-warning-400);
+  border-color: rgba(234,179,8,0.2);
+}
+
+.q-status-indicator--pending::before {
+  background: var(--q-warning-400);
+  box-shadow: 0 0 6px rgba(234,179,8,0.3);
+}
+
+.q-status-indicator--error {
+  background: rgba(239,68,68,0.1);
+  color: var(--q-danger-400);
+  border-color: rgba(239,68,68,0.2);
+}
+
+.q-status-indicator--error::before {
+  background: var(--q-danger-400);
+  box-shadow: 0 0 6px rgba(239,68,68,0.4);
+}
+
+.q-status-indicator--idle {
+  background: rgba(148,163,184,0.08);
+  color: var(--q-slate-400);
+  border-color: rgba(148,163,184,0.12);
+}
+
+.q-status-indicator--idle::before {
+  background: var(--q-slate-500);
+}
+
+.q-status-indicator--processing {
+  background: rgba(6,182,212,0.1);
+  color: var(--q-cyan-400);
+  border-color: rgba(6,182,212,0.2);
+}
+
+.q-status-indicator--processing::before {
+  background: var(--q-cyan-400);
+  box-shadow: 0 0 6px rgba(6,182,212,0.4);
+  animation: q-dot-pulse 1.5s ease-in-out infinite;
+}
+
+/* --- 11. Section Reveal Animations --- */
+
+.q-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.q-reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.q-reveal-delay-1 { transition-delay: 80ms; }
+.q-reveal-delay-2 { transition-delay: 160ms; }
+.q-reveal-delay-3 { transition-delay: 240ms; }
+.q-reveal-delay-4 { transition-delay: 320ms; }
+
+/* --- 12. KPI Card Accent Borders --- */
+
+.q-kpi-card[data-accent="blue"] {
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--q-accent-500), var(--q-cyan-500)) 1;
+  border-image-slice: 1 1 0 1;
+}
+
+.q-kpi-card[data-accent="green"] {
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--q-success-500), var(--q-success-400)) 1;
+  border-image-slice: 1 1 0 1;
+}
+
+.q-kpi-card[data-accent="red"] {
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--q-danger-500), var(--q-danger-400)) 1;
+  border-image-slice: 1 1 0 1;
+}
+
+.q-kpi-card[data-accent="neutral"] {
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--q-slate-500), var(--q-slate-400)) 1;
+  border-image-slice: 1 1 0 1;
+}
+
+.q-kpi-card[data-accent="orange"] {
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--q-orange-500), var(--q-orange-400)) 1;
+  border-image-slice: 1 1 0 1;
+}
+
+.q-kpi-card[data-accent="purple"] {
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--q-purple-600), var(--q-purple-500)) 1;
+  border-image-slice: 1 1 0 1;
+}
+
+.q-kpi-card:hover .q-kpi-icon {
+  transform: scale(1.08);
+  transition: transform var(--q-transition-fast);
+}
+
+/* --- 13. Card Glass Variant --- */
+
+.q-card-glass {
+  background: rgba(13,21,37,0.65);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--q-radius-xl);
+  box-shadow: var(--q-shadow-card), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+.q-card-glass:hover {
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: var(--q-shadow-card-hover), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* --- 14. Pipeline Completed State --- */
+
+.q-pipeline-stage--completed {
+  background: rgba(34,197,94,0.06);
+  border-color: rgba(34,197,94,0.15);
+}
+
+.q-pipeline-stage--completed .q-pipeline-stage-name {
+  color: var(--q-success-400);
+}
+
+.q-pipeline-completed-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--q-space-3);
+  padding: var(--q-space-4) var(--q-space-5);
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.18);
+  border-radius: var(--q-radius-lg);
+  color: var(--q-success-400);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.q-pipeline-completed-banner-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.q-pipeline-completed-banner-text {
+  color: var(--q-success-400);
+}
+
+/* --- 15. Print-Friendly Basics --- */
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #1a1a1a !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  body::before {
+    display: none !important;
+  }
+
+  .q-nav,
+  .q-sidebar,
+  .q-btn,
+  .q-selection-bar,
+  .q-pipeline-stage-shimmer {
+    display: none !important;
+  }
+
+  .q-card,
+  .q-card-glass,
+  .q-kpi-card,
+  .q-scenario-card {
+    background: #fff !important;
+    border: 1px solid #ddd !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .q-page-title,
+  .q-section-title,
+  .q-kpi-value,
+  .q-hero-title {
+    color: #1a1a1a !important;
+    -webkit-text-fill-color: #1a1a1a !important;
+    background: none !important;
+  }
+
+  .q-badge,
+  .q-status-indicator {
+    border: 1px solid #ccc !important;
+    background: transparent !important;
+    color: #333 !important;
+  }
+
+  .q-skeleton {
+    animation: none !important;
+    background: #f0f0f0 !important;
+  }
+
+  a {
+    color: #1a1a1a !important;
+    text-decoration: underline;
+  }
+
+  .q-graph-node {
+    background: #fff !important;
+    border: 1px solid #ddd !important;
+  }
+}

@@ -16,7 +16,7 @@ export default async function ProjectDetailPage({
   if (!project) return notFound();
 
   return (
-    <div>
+    <div className="q-page-content-enter">
       <div className="q-breadcrumb">
         <Link href="/projects">Projects</Link>
         <span className="q-breadcrumb-sep" />
@@ -32,7 +32,7 @@ export default async function ProjectDetailPage({
         </div>
       </div>
 
-      <div className="q-card" style={{ marginBottom: 32 }}>
+      <div className="q-card q-animate-in" style={{ marginBottom: 32 }}>
         <div className="q-card-header">
           <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--q-slate-200)', letterSpacing: '0.02em' }}>
             📄 Process Narrative
@@ -45,12 +45,14 @@ export default async function ProjectDetailPage({
         </div>
       </div>
 
-      <p style={{ color: 'var(--q-slate-400)', fontSize: 14 }}>
-        Pipeline jobs are linked at creation time.{' '}
-        <Link href="/projects" style={{ color: 'var(--q-cyan-400)', textDecoration: 'none', fontWeight: 500 }}>
-          ← Back to projects
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+        <Link href="/projects" className="q-btn q-btn-ghost" style={{ fontSize: 13 }}>
+          ← Back to Projects
         </Link>
-      </p>
+        <span style={{ color: 'var(--q-slate-500)', fontSize: 12 }}>
+          Created {new Date(project.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+        </span>
+      </div>
     </div>
   );
 }
