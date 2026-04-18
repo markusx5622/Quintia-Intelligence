@@ -13,7 +13,7 @@ function formatStageName(stage: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function StageBadge({ record, isLast }: { record: StageRecord; isLast: boolean }) {
+function StageBadge({ record }: { record: StageRecord }) {
   const meta = STATUS_META[record.status] || STATUS_META.pending;
   return (
     <div className="q-pipeline-stage">
@@ -24,7 +24,6 @@ function StageBadge({ record, isLast }: { record: StageRecord; isLast: boolean }
       <span className={`q-badge ${meta.labelClass}`}>
         {record.status}
       </span>
-      {!isLast && <style>{``}</style>}
     </div>
   );
 }
@@ -62,8 +61,8 @@ export default function PipelineStatusPanel({ job }: { job: PipelineJob }) {
         </div>
         <div style={{ padding: 'var(--q-space-4) 0' }}>
           <div className="q-pipeline-track">
-            {job.stages.map((s, i) => (
-              <StageBadge key={s.stage} record={s} isLast={i === job.stages.length - 1} />
+            {job.stages.map((s) => (
+              <StageBadge key={s.stage} record={s} />
             ))}
           </div>
         </div>
