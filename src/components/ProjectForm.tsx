@@ -38,72 +38,70 @@ export default function ProjectForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 640 }}>
+    <form onSubmit={handleSubmit} style={{ maxWidth: 680 }}>
       {error && (
-        <div style={{ padding: '12px 16px', background: '#fef2f2', color: '#991b1b', borderRadius: 6, marginBottom: 16, border: '1px solid #fecaca' }}>
-          {error}
+        <div className="q-error-banner" style={{ marginBottom: 20 }}>
+          ⚠ {error}
         </div>
       )}
 
-      <div style={{ marginBottom: 20 }}>
-        <label htmlFor="name" style={{ display: 'block', fontWeight: 600, marginBottom: 6, color: '#1e293b' }}>
-          Project Name <span style={{ color: '#dc2626' }}>*</span>
-        </label>
-        <input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          placeholder="e.g. Procurement Approval Process"
-          style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 14, boxSizing: 'border-box' }}
-        />
-      </div>
+      <div className="q-card" style={{ marginBottom: 24 }}>
+        <div className="q-card-body" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div>
+            <label htmlFor="name" className="q-form-label">
+              Project Name <span className="q-form-required">*</span>
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder="e.g. Procurement Approval Process"
+              className="q-input"
+            />
+          </div>
 
-      <div style={{ marginBottom: 20 }}>
-        <label htmlFor="description" style={{ display: 'block', fontWeight: 600, marginBottom: 6, color: '#1e293b' }}>
-          Description
-        </label>
-        <input
-          id="description"
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Optional short description"
-          style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 14, boxSizing: 'border-box' }}
-        />
-      </div>
+          <div>
+            <label htmlFor="description" className="q-form-label">
+              Description
+            </label>
+            <input
+              id="description"
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Optional short description"
+              className="q-input"
+            />
+          </div>
 
-      <div style={{ marginBottom: 24 }}>
-        <label htmlFor="narrative" style={{ display: 'block', fontWeight: 600, marginBottom: 6, color: '#1e293b' }}>
-          Process Narrative <span style={{ color: '#dc2626' }}>*</span>
-        </label>
-        <textarea
-          id="narrative"
-          value={narrative}
-          onChange={(e) => setNarrative(e.target.value)}
-          required
-          rows={10}
-          placeholder="Describe your operational process in detail. Include roles, systems, steps, handoffs, pain points..."
-          style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 14, fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
-        />
+          <div>
+            <label htmlFor="narrative" className="q-form-label">
+              Process Narrative <span className="q-form-required">*</span>
+            </label>
+            <textarea
+              id="narrative"
+              value={narrative}
+              onChange={(e) => setNarrative(e.target.value)}
+              required
+              rows={10}
+              placeholder="Describe your operational process in detail. Include roles, systems, steps, handoffs, pain points..."
+              className="q-textarea"
+            />
+            <div style={{ fontSize: 12, color: 'var(--q-slate-400)', marginTop: 6 }}>
+              The more detail you provide, the richer the analysis output.
+            </div>
+          </div>
+        </div>
       </div>
 
       <button
         type="submit"
         disabled={loading}
-        style={{
-          padding: '10px 24px',
-          background: loading ? '#94a3b8' : '#1e40af',
-          color: '#fff',
-          border: 'none',
-          borderRadius: 6,
-          fontSize: 14,
-          fontWeight: 600,
-          cursor: loading ? 'not-allowed' : 'pointer',
-        }}
+        className="q-btn q-btn-primary"
       >
-        {loading ? 'Creating...' : 'Create Project & Analyse'}
+        {loading ? 'Creating...' : '⚡ Create Project & Analyse'}
       </button>
     </form>
   );

@@ -49,59 +49,56 @@ export default function PipelinePage({
   }
 
   if (error && !job) {
-    return <div style={{ color: '#dc2626' }}>Error: {error}</div>;
+    return (
+      <div className="q-error-banner">⚠ Error: {error}</div>
+    );
   }
 
   if (!job) {
-    return <div style={{ color: '#64748b' }}>Loading pipeline status...</div>;
+    return (
+      <div className="q-loading">
+        <div className="q-loading-spinner" />
+        Loading pipeline status...
+      </div>
+    );
   }
 
   return (
     <div>
-      <h1 style={{ marginBottom: 8 }}>Pipeline Status</h1>
-      <p style={{ color: '#64748b', marginBottom: 20, fontSize: 13 }}>
-        Job: {jobId}
-      </p>
+      <div className="q-breadcrumb">
+        <Link href="/projects">Projects</Link>
+        <span className="q-breadcrumb-sep" />
+        <span>Pipeline</span>
+      </div>
 
-      {job.status === 'pending' && (
-        <button
-          onClick={handleStart}
-          disabled={starting}
-          style={{
-            padding: '10px 24px',
-            background: starting ? '#94a3b8' : '#1e40af',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 6,
-            fontWeight: 600,
-            cursor: starting ? 'not-allowed' : 'pointer',
-            marginBottom: 20,
-          }}
-        >
-          {starting ? 'Starting...' : '▶ Start Analysis'}
-        </button>
-      )}
+      <div className="q-page-header" style={{ marginBottom: 24 }}>
+        <div className="q-page-header-left">
+          <h1 className="q-page-title">Pipeline Status</h1>
+          <span className="q-page-subtitle" style={{ fontFamily: 'var(--q-font-mono)', fontSize: 12 }}>
+            Job: {jobId}
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', gap: 12 }}>
+          {job.status === 'pending' && (
+            <button
+              onClick={handleStart}
+              disabled={starting}
+              className="q-btn q-btn-primary"
+            >
+              {starting ? 'Starting...' : '▶ Start Analysis'}
+            </button>
+          )}
+
+          {job.status === 'completed' && (
+            <Link href={`/results/${jobId}`} className="q-btn q-btn-success">
+              View Results →
+            </Link>
+          )}
+        </div>
+      </div>
 
       <PipelineStatusPanel job={job} />
-
-      {job.status === 'completed' && (
-        <div style={{ marginTop: 24 }}>
-          <Link
-            href={`/results/${jobId}`}
-            style={{
-              display: 'inline-block',
-              padding: '10px 24px',
-              background: '#16a34a',
-              color: '#fff',
-              textDecoration: 'none',
-              borderRadius: 6,
-              fontWeight: 600,
-            }}
-          >
-            View Results →
-          </Link>
-        </div>
-      )}
     </div>
   );
 }

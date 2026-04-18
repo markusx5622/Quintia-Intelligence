@@ -4,32 +4,29 @@ function formatEUR(value: number): string {
   return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
 }
 
-function Card({ label, value, color }: { label: string; value: string; color?: string }) {
-  return (
-    <div
-      style={{
-        flex: '1 1 180px',
-        padding: '20px 16px',
-        background: '#fff',
-        border: '1px solid #e2e8f0',
-        borderRadius: 8,
-        textAlign: 'center',
-      }}
-    >
-      <div style={{ fontSize: 13, color: '#64748b', marginBottom: 8, fontWeight: 500 }}>{label}</div>
-      <div style={{ fontSize: 22, fontWeight: 700, color: color || '#1e293b' }}>{value}</div>
-    </div>
-  );
-}
+const KPI_CONFIG: { key: keyof DeterministicFinancialOutput; label: string; icon: string; accent: string; format: (v: number) => string; colorFn?: (v: number) => string }[] = [
+  { key: 'baseline_cost_eur', label: 'Baseline Cost', icon: '💰', accent: 'blue', format: formatEUR },
+  { key: 'expected_savings_eur', label: 'Expected Savings', icon: '📈', accent: 'green', format: formatEUR, colorFn: () => 'var(--q-success-600)' },
+  { key: 'implementation_cost_eur', label: 'Implementation Cost', icon: '🔧', accent: 'red', format: formatEUR, colorFn: () => 'var(--q-danger-600)' },
+  { key: 'roi_percent', label: 'Return on Investment', icon: '📊', accent: 'green', format: (v) => `${v}%`, colorFn: (v) => v > 0 ? 'var(--q-success-600)' : 'var(--q-danger-600)' },
+  { key: 'payback_months', label: 'Payback Period', icon: '⏱️', accent: 'neutral', format: (v) => `${v} mo` },
+];
 
 export default function FinancialCards({ data }: { data: DeterministicFinancialOutput }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-      <Card label="Baseline Cost" value={formatEUR(data.baseline_cost_eur)} />
-      <Card label="Expected Savings" value={formatEUR(data.expected_savings_eur)} color="#16a34a" />
-      <Card label="Implementation Cost" value={formatEUR(data.implementation_cost_eur)} color="#dc2626" />
-      <Card label="ROI" value={`${data.roi_percent}%`} color={data.roi_percent > 0 ? '#16a34a' : '#dc2626'} />
-      <Card label="Payback Period" value={`${data.payback_months} months`} />
+    <div className="q-kpi-grid">
+      {KPI_CONFIG.map(({ key, label, icon, accent, format, colorFn }) => {
+        const value = data[key];
+        return (
+          <div key={key} className="q-kpi-card" data-accent={accent}>
+            <span className="q-kpi-icon">{icon}</span>
+            <div className="q-kpi-label">{label}</div>
+            <div className="q-kpi-value" style={{ color: colorFn ? colorFn(value) : 'var(--q-navy-900)' }}>
+              {format(value)}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

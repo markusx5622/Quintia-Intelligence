@@ -8,6 +8,34 @@ import DiagnosticsPanel from '@/src/components/DiagnosticsPanel';
 import ExecutiveSynthesisCard from '@/src/components/ExecutiveSynthesisCard';
 import type { PipelineResult } from '@/src/lib/types/contracts';
 
+function ConfidenceRing({ score }: { score: number }) {
+  const radius = 50;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (score / 100) * circumference;
+  const color = score >= 70 ? 'var(--q-success-500)' : score >= 40 ? 'var(--q-warning-500)' : 'var(--q-danger-500)';
+
+  return (
+    <div className="q-confidence-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r={radius} fill="none" stroke="var(--q-slate-100)" strokeWidth="8" />
+        <circle
+          cx="60" cy="60" r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth="8"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="q-confidence-value">
+        <span className="q-confidence-number" style={{ color }}>{score}%</span>
+        <span className="q-confidence-label">Score</span>
+      </div>
+    </div>
+  );
+}
+
 export default function ResultsPage({
   params,
 }: {
@@ -41,14 +69,19 @@ export default function ResultsPage({
   }, [jobId]);
 
   if (loading) {
-    return <div style={{ color: '#64748b' }}>Loading results...</div>;
+    return (
+      <div className="q-loading">
+        <div className="q-loading-spinner" />
+        Loading results...
+      </div>
+    );
   }
 
   if (error) {
     return (
       <div>
-        <div style={{ color: '#dc2626', marginBottom: 16 }}>Error: {error}</div>
-        <Link href={`/pipeline/${jobId}`} style={{ color: '#1e40af', textDecoration: 'none', fontSize: 14 }}>
+        <div className="q-error-banner" style={{ marginBottom: 16 }}>⚠ Error: {error}</div>
+        <Link href={`/pipeline/${jobId}`} style={{ color: 'var(--q-accent-500)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>
           ← Back to Pipeline Status
         </Link>
       </div>
@@ -56,74 +89,102 @@ export default function ResultsPage({
   }
 
   if (!result) {
-    return <div style={{ color: '#64748b' }}>No results available.</div>;
+    return (
+      <div className="q-empty-state">
+        <div className="q-empty-state-icon">📊</div>
+        <p>No results available.</p>
+      </div>
+    );
   }
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>Analysis Results</h1>
-        <Link
-          href={`/pipeline/${jobId}`}
-          style={{ color: '#1e40af', textDecoration: 'none', fontSize: 14 }}
-        >
+      <div className="q-breadcrumb">
+        <Link href="/projects">Projects</Link>
+        <span className="q-breadcrumb-sep" />
+        <Link href={`/pipeline/${jobId}`}>Pipeline</Link>
+        <span className="q-breadcrumb-sep" />
+        <span>Results</span>
+      </div>
+
+      <div className="q-page-header">
+        <div className="q-page-header-left">
+          <h1 className="q-page-title">Analysis Results</h1>
+          <span className="q-page-subtitle" style={{ fontFamily: 'var(--q-font-mono)', fontSize: 12 }}>
+            Job: {jobId}
+          </span>
+        </div>
+        <Link href={`/pipeline/${jobId}`} className="q-btn q-btn-ghost">
           ← Pipeline Status
         </Link>
       </div>
 
       {/* Financial Cards — LAW 4: deterministic output only */}
       {result.financials && (
-        <section style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 18, marginBottom: 12 }}>Financial Projections</h2>
+        <section className="q-section">
+          <h2 className="q-section-title">Financial Projections</h2>
           <FinancialCards data={result.financials} />
         </section>
       )}
 
       {/* Executive Synthesis */}
       {result.synthesis && (
-        <section style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 18, marginBottom: 12 }}>Executive Synthesis</h2>
+        <section className="q-section">
+          <h2 className="q-section-title">Executive Synthesis</h2>
           <ExecutiveSynthesisCard data={result.synthesis} />
         </section>
       )}
 
       {/* Diagnostics */}
       {result.diagnostics && (
-        <section style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 18, marginBottom: 12 }}>Diagnostics</h2>
+        <section className="q-section">
+          <h2 className="q-section-title">Diagnostics</h2>
           <DiagnosticsPanel data={result.diagnostics} />
         </section>
       )}
 
       {/* Process Graph */}
       {result.processGraph && (
-        <section style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 18, marginBottom: 12 }}>Process Graph</h2>
+        <section className="q-section">
+          <h2 className="q-section-title">Process Graph</h2>
           <ProcessGraphView data={result.processGraph} />
         </section>
       )}
 
-      {/* Critic */}
+      {/* Critic / Confidence */}
       {result.critic && (
-        <section style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 18, marginBottom: 12 }}>Analysis Confidence</h2>
-          <div style={{ padding: '16px 20px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8 }}>
-            <div style={{ fontSize: 28, fontWeight: 700, color: result.critic.confidence_score >= 60 ? '#16a34a' : '#dc2626', marginBottom: 8 }}>
-              {result.critic.confidence_score}%
-            </div>
-            <p style={{ margin: '0 0 12px', color: '#64748b' }}>{result.critic.summary}</p>
-            {result.critic.flags.length > 0 && (
-              <div>
-                {result.critic.flags.map((flag, i) => (
-                  <div key={i} style={{ fontSize: 13, color: '#64748b', marginBottom: 4 }}>
-                    <strong style={{ color: flag.severity === 'critical' ? '#dc2626' : flag.severity === 'warning' ? '#d97706' : '#64748b' }}>
-                      [{flag.severity}]
-                    </strong>{' '}
-                    {flag.area}: {flag.concern}
-                  </div>
-                ))}
+        <section className="q-section">
+          <h2 className="q-section-title">Analysis Confidence</h2>
+          <div className="q-card">
+            <div className="q-card-body">
+              <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                <ConfidenceRing score={result.critic.confidence_score} />
+                <div style={{ flex: 1, minWidth: 240 }}>
+                  <p style={{ color: 'var(--q-navy-700)', fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
+                    {result.critic.summary}
+                  </p>
+                  {result.critic.flags.length > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      {result.critic.flags.map((flag, i) => {
+                        const badgeClass = flag.severity === 'critical' ? 'q-badge-danger'
+                          : flag.severity === 'warning' ? 'q-badge-warning'
+                          : 'q-badge-info';
+                        return (
+                          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13 }}>
+                            <span className={`q-badge ${badgeClass}`} style={{ flexShrink: 0, marginTop: 1 }}>
+                              {flag.severity}
+                            </span>
+                            <span style={{ color: 'var(--q-navy-700)' }}>
+                              <strong>{flag.area}:</strong> {flag.concern}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
+            </div>
           </div>
         </section>
       )}
