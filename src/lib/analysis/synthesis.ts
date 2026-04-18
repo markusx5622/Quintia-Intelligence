@@ -74,23 +74,9 @@ export function generateSynthesis(inputs: {
           'Phase 1 (0–3 months): Assessment and detailed design of priority interventions.',
           'Phase 2 (3–6 months): Pilot implementation of top-priority changes.',
           'Phase 3 (6–12 months): Full rollout, monitoring, and optimisation.',
-          `Target: Achieve ${financials.expected_cost_reduction_percent ?? 'projected'}% cost reduction within 12 months.`,
+          `Target: Achieve projected cost reduction within 12 months.`,
         ].join(' ')
       : 'No roadmap generated — insufficient data for phased planning.';
 
   return { executive_summary, current_state, recommendation, roadmap };
-}
-
-// Helper to extract the reduction percent from financial output if available
-// (not stored directly, but can be derived)
-interface FinancialsWithMeta extends DeterministicFinancialOutput {
-  expected_cost_reduction_percent?: number;
-}
-
-export function generateSynthesisWithMeta(
-  inputs: Parameters<typeof generateSynthesis>[0] & {
-    financials: FinancialsWithMeta;
-  },
-): SynthesisOutput {
-  return generateSynthesis(inputs);
 }
