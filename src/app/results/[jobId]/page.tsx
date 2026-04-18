@@ -1,11 +1,14 @@
 'use client';
 
-import { use, useState, useEffect } from 'react';
+import { use, useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import FinancialCards from '@/src/components/FinancialCards';
-import ProcessGraphView from '@/src/components/ProcessGraphView';
-import DiagnosticsPanel from '@/src/components/DiagnosticsPanel';
 import ExecutiveSynthesisCard from '@/src/components/ExecutiveSynthesisCard';
+import ScenarioComparisonPanel from '@/src/components/ScenarioComparisonPanel';
+import EvidencePanel from '@/src/components/EvidencePanel';
+import InteractiveGraphView from '@/src/components/InteractiveGraphView';
+import { useIntelligenceLinker } from '@/src/components/useIntelligenceLinker';
+import { buildIntelligenceModel } from '@/src/lib/analysis/intelligence-linker';
 import type { PipelineResult } from '@/src/lib/types/contracts';
 
 function ConfidenceRing({ score }: { score: number }) {
@@ -68,6 +71,15 @@ export default function ResultsPage({
     return () => controller.abort();
   }, [jobId]);
 
+  // Build the unified intelligence model for cross-linking
+  const intelligenceModel = useMemo(
+    () => (result ? buildIntelligenceModel(result) : null),
+    [result],
+  );
+
+  // Interactive selection state
+  const linker = useIntelligenceLinker(intelligenceModel);
+
   if (loading) {
     return (
       <div className="q-loading">
@@ -119,6 +131,27 @@ export default function ResultsPage({
         </Link>
       </div>
 
+      {/* Selection indicator bar */}
+      {linker.hasSelection && (
+        <div className="q-selection-bar">
+          <span className="q-selection-bar-label">
+            Selected {linker.selection.type}:
+          </span>
+          <span className="q-selection-bar-id">{linker.selection.id}</span>
+          <span style={{ fontSize: 11, color: 'var(--q-slate-400)' }}>
+            {linker.selection.highlightedNodeIds.length} node(s) ·
+            {' '}{linker.selection.highlightedIssueIds.length} issue(s) ·
+            {' '}{linker.selection.highlightedScenarioIds.length} scenario(s)
+          </span>
+          <button
+            className="q-selection-bar-clear"
+            onClick={linker.clearSelection}
+          >
+            ✕ Clear
+          </button>
+        </div>
+      )}
+
       {/* Financial Cards — LAW 4: deterministic output only */}
       {result.financials && (
         <section className="q-section">
@@ -135,19 +168,42 @@ export default function ResultsPage({
         </section>
       )}
 
-      {/* Diagnostics */}
-      {result.diagnostics && (
+      {/* Scenario Comparison */}
+      {intelligenceModel && intelligenceModel.scenarios.length > 0 && (
         <section className="q-section">
-          <h2 className="q-section-title">Diagnostics</h2>
-          <DiagnosticsPanel data={result.diagnostics} />
+          <h2 className="q-section-title">Scenario Comparison</h2>
+          <ScenarioComparisonPanel
+            scenarios={intelligenceModel.scenarios}
+            baselineFinancials={intelligenceModel.baselineFinancials}
+            selection={linker.selection}
+            onSelectScenario={linker.selectScenario}
+          />
         </section>
       )}
 
-      {/* Process Graph */}
-      {result.processGraph && (
+      {/* Diagnostics — Evidence / Why Panel */}
+      {intelligenceModel && intelligenceModel.issues.length > 0 && (
+        <section className="q-section">
+          <h2 className="q-section-title">Diagnostics &amp; Evidence</h2>
+          <EvidencePanel
+            issues={intelligenceModel.issues}
+            selection={linker.selection}
+            onSelectIssue={linker.selectIssue}
+          />
+        </section>
+      )}
+
+      {/* Interactive Process Graph */}
+      {intelligenceModel && intelligenceModel.graphNodes.length > 0 && (
         <section className="q-section">
           <h2 className="q-section-title">Process Graph</h2>
-          <ProcessGraphView data={result.processGraph} />
+          <InteractiveGraphView
+            nodes={intelligenceModel.graphNodes}
+            edges={intelligenceModel.graphEdges}
+            graphSummary={intelligenceModel.graphSummary}
+            selection={linker.selection}
+            onSelectNode={linker.selectNode}
+          />
         </section>
       )}
 
