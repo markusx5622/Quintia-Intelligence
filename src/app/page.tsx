@@ -45,7 +45,7 @@ const TRUST_PILLARS = [
   {
     icon: '🏗️',
     title: 'Internal-First Engine',
-    desc: 'All analysis runs inside Quintia\'s own engine. No external AI providers, no third-party orchestration. Your data stays within your boundary.',
+    desc: 'All analysis runs inside Quintia\u2019s own engine. No external AI providers, no third-party orchestration. Your data stays within your boundary.',
   },
   {
     icon: '🧮',

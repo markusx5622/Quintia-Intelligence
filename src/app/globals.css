@@ -617,7 +617,6 @@ body::before {
   line-height: 1.2;
   color: var(--q-white);
   position: relative;
-  word-break: break-word;
   overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
@@ -1375,7 +1374,6 @@ body::before {
   color: var(--q-white);
   font-family: var(--q-font-mono);
   font-variant-numeric: tabular-nums;
-  word-break: break-word;
   overflow-wrap: anywhere;
 }
 
@@ -1471,7 +1469,6 @@ body::before {
   color: var(--q-white);
   font-family: var(--q-font-mono);
   font-variant-numeric: tabular-nums;
-  word-break: break-word;
   overflow-wrap: anywhere;
 }
 

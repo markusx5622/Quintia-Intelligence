@@ -96,18 +96,12 @@ export default function PipelineStatusPanel({ job }: { job: PipelineJob }) {
     const stagesKey = job.stages.map((s) => `${s.stage}:${s.status}`).join('|');
     if (stagesKey !== prevStagesRef.current) {
       prevStagesRef.current = stagesKey;
-      // Reveal stages progressively on new data
+      // Reveal stages progressively
       setVisibleCount(0);
       const timer = setTimeout(() => setVisibleCount(job.stages.length), 50);
       return () => clearTimeout(timer);
     }
   }, [job.stages]);
-
-  // On mount, reveal immediately
-  useEffect(() => {
-    const timer = setTimeout(() => setVisibleCount(job.stages.length), 50);
-    return () => clearTimeout(timer);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
