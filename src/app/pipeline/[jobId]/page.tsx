@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState, useEffect, useCallback } from 'react';
+import { use, useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import PipelineStatusPanel from '@/src/components/PipelineStatusPanel';
 import type { PipelineJob } from '@/src/lib/types/contracts';
@@ -14,6 +14,7 @@ export default function PipelinePage({
   const [job, setJob] = useState<PipelineJob | null>(null);
   const [error, setError] = useState('');
   const [starting, setStarting] = useState(false);
+  const initialFetchDone = useRef(false);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -27,7 +28,10 @@ export default function PipelinePage({
   }, [jobId]);
 
   useEffect(() => {
-    fetchStatus();
+    if (!initialFetchDone.current) {
+      initialFetchDone.current = true;
+      fetchStatus();
+    }
     const interval = setInterval(fetchStatus, 2000);
     return () => clearInterval(interval);
   }, [fetchStatus]);

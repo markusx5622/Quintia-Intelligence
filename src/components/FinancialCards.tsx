@@ -7,7 +7,7 @@ function formatEUR(value: number): string {
 const KPI_CONFIG: { key: keyof DeterministicFinancialOutput; label: string; icon: string; accent: string; format: (v: number) => string; colorFn?: (v: number) => string }[] = [
   { key: 'baseline_cost_eur', label: 'Baseline Cost', icon: '💰', accent: 'blue', format: formatEUR },
   { key: 'expected_savings_eur', label: 'Expected Savings', icon: '📈', accent: 'green', format: formatEUR, colorFn: () => 'var(--q-success-600)' },
-  { key: 'implementation_cost_eur', label: 'Implementation Cost', icon: '🔧', accent: 'red', format: formatEUR, colorFn: () => 'var(--q-danger-600)' },
+  { key: 'implementation_cost_eur', label: 'Implementation Cost', icon: '🔧', accent: 'red', format: formatEUR },
   { key: 'roi_percent', label: 'Return on Investment', icon: '📊', accent: 'green', format: (v) => `${v}%`, colorFn: (v) => v > 0 ? 'var(--q-success-600)' : 'var(--q-danger-600)' },
   { key: 'payback_months', label: 'Payback Period', icon: '⏱️', accent: 'neutral', format: (v) => `${v} mo` },
 ];
