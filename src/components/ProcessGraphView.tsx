@@ -19,10 +19,6 @@ const TYPE_SHAPES: Record<string, string> = {
 };
 
 export default function ProcessGraphView({ data }: { data: ProcessGraphOutput }) {
-  // Build adjacency for connector rendering
-  const nodeIndexMap = new Map<string, number>();
-  data.nodes.forEach((n, i) => nodeIndexMap.set(n.id, i));
-
   return (
     <div>
       <p style={{ color: '#94a3b8', margin: '0 0 24px', fontSize: 14, lineHeight: 1.6 }}>

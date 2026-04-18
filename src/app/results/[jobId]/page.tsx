@@ -256,7 +256,7 @@ export default function ResultsPage({
                     stroke={result.critic.confidence_score >= 60 ? '#22c55e' : '#ef4444'}
                     strokeWidth="8"
                     strokeLinecap="round"
-                    strokeDasharray={`${(result.critic.confidence_score / 100) * 314} 314`}
+                    strokeDasharray={`${(result.critic.confidence_score / 100) * (2 * Math.PI * 50)} ${2 * Math.PI * 50}`}
                     transform="rotate(-90 60 60)"
                     style={{ transition: 'stroke-dasharray 1s ease-out' }}
                   />
