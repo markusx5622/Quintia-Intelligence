@@ -85,7 +85,7 @@ export default function InteractiveGraphView({
                   onClick={() => onSelectNode(node.id)}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelectNode(node.id); }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelectNode(node.id); } }}
                 >
                   <div className="q-graph-node-icon" style={{ background: meta.bg, color: meta.color }}>
                     {meta.icon}
