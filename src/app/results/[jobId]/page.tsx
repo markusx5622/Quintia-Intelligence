@@ -9,17 +9,17 @@ import ExecutiveSynthesisCard from '@/src/components/ExecutiveSynthesisCard';
 import type { PipelineResult } from '@/src/lib/types/contracts';
 
 function ConfidenceRing({ score }: { score: number }) {
-  const radius = 50;
+  const radius = 56;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
-  const color = score >= 70 ? 'var(--q-success-500)' : score >= 40 ? 'var(--q-warning-500)' : 'var(--q-danger-500)';
+  const color = score >= 70 ? 'var(--q-success-400)' : score >= 40 ? 'var(--q-warning-400)' : 'var(--q-danger-400)';
 
   return (
     <div className="q-confidence-ring">
-      <svg width="120" height="120" viewBox="0 0 120 120">
-        <circle cx="60" cy="60" r={radius} fill="none" stroke="var(--q-slate-100)" strokeWidth="8" />
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r={radius} fill="none" stroke="var(--q-surface-3)" strokeWidth="8" />
         <circle
-          cx="60" cy="60" r={radius}
+          cx="70" cy="70" r={radius}
           fill="none"
           stroke={color}
           strokeWidth="8"
@@ -81,7 +81,7 @@ export default function ResultsPage({
     return (
       <div>
         <div className="q-error-banner" style={{ marginBottom: 16 }}>⚠ Error: {error}</div>
-        <Link href={`/pipeline/${jobId}`} style={{ color: 'var(--q-accent-500)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>
+        <Link href={`/pipeline/${jobId}`} style={{ color: 'var(--q-cyan-400)', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>
           ← Back to Pipeline Status
         </Link>
       </div>
@@ -160,22 +160,31 @@ export default function ResultsPage({
               <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start', flexWrap: 'wrap' }}>
                 <ConfidenceRing score={result.critic.confidence_score} />
                 <div style={{ flex: 1, minWidth: 240 }}>
-                  <p style={{ color: 'var(--q-navy-700)', fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
+                  <p style={{ color: 'var(--q-slate-300)', fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
                     {result.critic.summary}
                   </p>
                   {result.critic.flags.length > 0 && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {result.critic.flags.map((flag, i) => {
                         const badgeClass = flag.severity === 'critical' ? 'q-badge-danger'
                           : flag.severity === 'warning' ? 'q-badge-warning'
                           : 'q-badge-info';
                         return (
-                          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13 }}>
+                          <div key={i} style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: 12,
+                            fontSize: 13,
+                            padding: '10px 14px',
+                            background: 'var(--q-surface-3)',
+                            borderRadius: 'var(--q-radius-md)',
+                            border: '1px solid var(--q-border-subtle)',
+                          }}>
                             <span className={`q-badge ${badgeClass}`} style={{ flexShrink: 0, marginTop: 1 }}>
                               {flag.severity}
                             </span>
-                            <span style={{ color: 'var(--q-navy-700)' }}>
-                              <strong>{flag.area}:</strong> {flag.concern}
+                            <span style={{ color: 'var(--q-slate-300)' }}>
+                              <strong style={{ color: 'var(--q-white)' }}>{flag.area}:</strong> {flag.concern}
                             </span>
                           </div>
                         );

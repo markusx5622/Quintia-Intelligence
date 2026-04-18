@@ -89,7 +89,7 @@ export default function ProjectForm() {
               placeholder="Describe your operational process in detail. Include roles, systems, steps, handoffs, pain points..."
               className="q-textarea"
             />
-            <div style={{ fontSize: 12, color: 'var(--q-slate-400)', marginTop: 6 }}>
+            <div style={{ fontSize: 12, color: 'var(--q-slate-500)', marginTop: 6 }}>
               The more detail you provide, the richer the analysis output.
             </div>
           </div>

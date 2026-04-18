@@ -34,7 +34,7 @@ export default async function ProjectDetailPage({
 
       <div className="q-card" style={{ marginBottom: 32 }}>
         <div className="q-card-header">
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--q-navy-800)', letterSpacing: '0.02em' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--q-slate-200)', letterSpacing: '0.02em' }}>
             📄 Process Narrative
           </div>
         </div>
@@ -45,9 +45,9 @@ export default async function ProjectDetailPage({
         </div>
       </div>
 
-      <p style={{ color: 'var(--q-slate-500)', fontSize: 14 }}>
+      <p style={{ color: 'var(--q-slate-400)', fontSize: 14 }}>
         Pipeline jobs are linked at creation time.{' '}
-        <Link href="/projects" style={{ color: 'var(--q-accent-500)', textDecoration: 'none', fontWeight: 500 }}>
+        <Link href="/projects" style={{ color: 'var(--q-cyan-400)', textDecoration: 'none', fontWeight: 500 }}>
           ← Back to projects
         </Link>
       </p>

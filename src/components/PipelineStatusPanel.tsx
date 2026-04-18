@@ -41,8 +41,8 @@ export default function PipelineStatusPanel({ job }: { job: PipelineJob }) {
           {job.status === 'running' && '● '}{job.status}
         </span>
         {job.currentStage && (
-          <span style={{ color: 'var(--q-slate-500)', fontSize: 14 }}>
-            Stage: <strong style={{ color: 'var(--q-navy-800)' }}>{formatStageName(job.currentStage)}</strong>
+          <span style={{ color: 'var(--q-slate-400)', fontSize: 14 }}>
+            Stage: <strong style={{ color: 'var(--q-white)' }}>{formatStageName(job.currentStage)}</strong>
           </span>
         )}
       </div>
@@ -55,7 +55,7 @@ export default function PipelineStatusPanel({ job }: { job: PipelineJob }) {
 
       <div className="q-card">
         <div className="q-card-header">
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--q-navy-800)', letterSpacing: '0.02em' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--q-slate-200)', letterSpacing: '0.02em' }}>
             Pipeline Stages
           </div>
         </div>
