@@ -28,8 +28,8 @@ export default function ProjectForm() {
         throw new Error(data.error || 'Failed to create project');
       }
 
-      const { projectId } = await res.json();
-      router.push(`/projects/${projectId}`);
+      const { jobId } = await res.json();
+      router.push(`/pipeline/${jobId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
