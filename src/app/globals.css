@@ -599,6 +599,8 @@ body::before {
 .q-kpi-card[data-accent="green"]::before { background: linear-gradient(90deg, var(--q-success-500), var(--q-success-400)); }
 .q-kpi-card[data-accent="red"]::before { background: linear-gradient(90deg, var(--q-danger-500), var(--q-danger-400)); }
 .q-kpi-card[data-accent="neutral"]::before { background: linear-gradient(90deg, var(--q-slate-500), var(--q-slate-400)); }
+.q-kpi-card[data-accent="orange"]::before { background: linear-gradient(90deg, var(--q-orange-500), var(--q-orange-400)); }
+.q-kpi-card[data-accent="purple"]::before { background: linear-gradient(90deg, var(--q-purple-600), var(--q-purple-500)); }
 
 .q-kpi-label {
   font-size: 11px;
@@ -2720,42 +2722,9 @@ html {
 .q-reveal-delay-4 { transition-delay: 320ms; }
 
 /* --- 12. KPI Card Accent Borders --- */
-
-.q-kpi-card[data-accent="blue"] {
-  border-top: 2px solid transparent;
-  border-image: linear-gradient(90deg, var(--q-accent-500), var(--q-cyan-500)) 1;
-  border-image-slice: 1 1 0 1;
-}
-
-.q-kpi-card[data-accent="green"] {
-  border-top: 2px solid transparent;
-  border-image: linear-gradient(90deg, var(--q-success-500), var(--q-success-400)) 1;
-  border-image-slice: 1 1 0 1;
-}
-
-.q-kpi-card[data-accent="red"] {
-  border-top: 2px solid transparent;
-  border-image: linear-gradient(90deg, var(--q-danger-500), var(--q-danger-400)) 1;
-  border-image-slice: 1 1 0 1;
-}
-
-.q-kpi-card[data-accent="neutral"] {
-  border-top: 2px solid transparent;
-  border-image: linear-gradient(90deg, var(--q-slate-500), var(--q-slate-400)) 1;
-  border-image-slice: 1 1 0 1;
-}
-
-.q-kpi-card[data-accent="orange"] {
-  border-top: 2px solid transparent;
-  border-image: linear-gradient(90deg, var(--q-orange-500), var(--q-orange-400)) 1;
-  border-image-slice: 1 1 0 1;
-}
-
-.q-kpi-card[data-accent="purple"] {
-  border-top: 2px solid transparent;
-  border-image: linear-gradient(90deg, var(--q-purple-600), var(--q-purple-500)) 1;
-  border-image-slice: 1 1 0 1;
-}
+/* Accent colours are applied via the ::before pseudo-element (see .q-kpi-card::before above)
+   so that overflow:hidden + border-radius correctly rounds the top corners of the accent line.
+   border-image is intentionally not used here because it ignores border-radius. */
 
 .q-kpi-card:hover .q-kpi-icon {
   transform: scale(1.08);
