@@ -22,7 +22,7 @@ export default async function ProjectsPage() {
       {projects.length === 0 ? (
         <div className="q-empty-state">
           <div className="q-empty-state-icon">📂</div>
-          <p style={{ fontSize: 16, fontWeight: 500, color: 'var(--q-navy-700)', marginBottom: 8 }}>
+          <p style={{ fontSize: 16, fontWeight: 500, color: 'var(--q-white)', marginBottom: 8 }}>
             No projects yet
           </p>
           <p style={{ fontSize: 14, color: 'var(--q-slate-400)', marginBottom: 20 }}>
@@ -38,16 +38,16 @@ export default async function ProjectsPage() {
             <Link key={p.id} href={`/projects/${p.id}`} className="q-project-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--q-navy-900)', marginBottom: 4 }}>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--q-white)', marginBottom: 4 }}>
                     {p.name}
                   </div>
                   {p.description && (
-                    <div style={{ fontSize: 13, color: 'var(--q-slate-500)', marginBottom: 6 }}>
+                    <div style={{ fontSize: 13, color: 'var(--q-slate-400)', marginBottom: 6 }}>
                       {p.description}
                     </div>
                   )}
                 </div>
-                <span style={{ fontSize: 18, color: 'var(--q-slate-300)' }}>›</span>
+                <span style={{ fontSize: 18, color: 'var(--q-slate-500)' }}>›</span>
               </div>
               <div style={{ fontSize: 12, color: 'var(--q-slate-400)', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span>📅</span> Created {new Date(p.createdAt).toLocaleDateString()}
