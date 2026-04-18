@@ -139,16 +139,18 @@ export function buildProcessGraph(narrative: string): ProcessGraphOutput {
     }
   }
 
+  const MAX_BRANCH_GAP = 2;
+
   // Find clusters of consecutive branch targets — they share the node before them
   if (branchTargetMap.size >= 2) {
     const branchIndices = Array.from(branchTargetMap.keys()).sort((a, b) => a - b);
-    // Group consecutive or near-consecutive indices (within gap of 1)
+    // Group consecutive or near-consecutive indices (within MAX_BRANCH_GAP)
     const groups: number[][] = [];
     let currentGroup = [branchIndices[0]];
 
-    for (let g = 1; g < branchIndices.length; g++) {
-      if (branchIndices[g] - branchIndices[g - 1] <= 2) {
-        currentGroup.push(branchIndices[g]);
+    for (let idx = 1; idx < branchIndices.length; idx++) {
+      if (branchIndices[idx] - branchIndices[idx - 1] <= MAX_BRANCH_GAP) {
+        currentGroup.push(branchIndices[idx]);
       } else {
         groups.push(currentGroup);
         currentGroup = [branchIndices[g]];

@@ -27,7 +27,7 @@ export function runCriticStage(inputs: {
 }): CriticOutput {
   const { ontology, processGraph, diagnostics, scenarios, financials } = inputs;
   const flags: CriticFlag[] = [];
-  let score = 90; // Start at 90, adjust based on analysis quality
+  let score = 85; // Baseline confidence — adjusted by quality signals
 
   // -- Ontology richness ---------------------------------------------------
   if (ontology.entities.length < 2) {
@@ -38,9 +38,6 @@ export function runCriticStage(inputs: {
   if (ontology.roles.length === 0) {
     flags.push({ area: 'ontology', concern: 'No roles identified — unclear who performs process steps.', severity: 'warning' });
     score -= 10;
-  } else if (ontology.roles.length >= 2) {
-    // Good extraction — slight confidence boost (capped via final clamp)
-    score += 3;
   }
 
   if (ontology.systems.length === 0) {

@@ -86,7 +86,7 @@ const RULES: DiagnosticRule[] = [
     evidenceTemplate: 'Visibility gaps ({matches}) prevent stakeholders from tracking work status, leading to reactive management and ownership ambiguity.',
   },
   {
-    keywords: ['ownership', 'unclear ownership', 'who owns', 'no owner'],
+    keywords: ['unclear ownership', 'no owner', 'ownership after'],
     title: 'Ownership ambiguity after handoff',
     baseSeverity: 'high',
     evidenceTemplate: 'Ownership concerns ({matches}) indicate that responsibility is not clearly assigned after key transitions, causing work to stall or be duplicated.',
@@ -158,14 +158,14 @@ export function runDiagnostics(
     }
   }
 
-  const criticalCount = issues.filter((i) => i.severity === 'critical').length;
-  const highCount = issues.filter((i) => i.severity === 'high').length;
-  const mediumCount = issues.filter((i) => i.severity === 'medium').length;
-  const lowCount = issues.filter((i) => i.severity === 'low').length;
+  const counts = { critical: 0, high: 0, medium: 0, low: 0 };
+  for (const issue of issues) {
+    counts[issue.severity]++;
+  }
 
   const summary =
     issues.length > 0
-      ? `Identified ${issues.length} diagnostic issue(s): ${criticalCount} critical, ${highCount} high, ${mediumCount} medium, ${lowCount} low.`
+      ? `Identified ${issues.length} diagnostic issue(s): ${counts.critical} critical, ${counts.high} high, ${counts.medium} medium, ${counts.low} low.`
       : 'No significant issues detected in the process narrative.';
 
   return { issues, summary };
