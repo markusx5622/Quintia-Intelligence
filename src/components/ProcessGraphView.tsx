@@ -9,61 +9,208 @@ const TYPE_COLORS: Record<string, string> = {
   process: '#3b82f6',
 };
 
+const TYPE_SHAPES: Record<string, string> = {
+  start: '◉',
+  end: '◉',
+  decision: '◇',
+  review: '□',
+  escalation: '△',
+  process: '○',
+};
+
 export default function ProcessGraphView({ data }: { data: ProcessGraphOutput }) {
+  // Build adjacency for connector rendering
+  const nodeIndexMap = new Map<string, number>();
+  data.nodes.forEach((n, i) => nodeIndexMap.set(n.id, i));
+
   return (
     <div>
-      <p style={{ color: '#64748b', marginBottom: 16 }}>{data.graph_summary}</p>
+      <p style={{ color: '#94a3b8', margin: '0 0 24px', fontSize: 14, lineHeight: 1.6 }}>
+        {data.graph_summary}
+      </p>
 
-      <div style={{ marginBottom: 20 }}>
-        <h4 style={{ margin: '0 0 8px', color: '#1e293b' }}>Steps</h4>
-        {data.nodes.map((node) => (
-          <div
-            key={node.id}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              padding: '8px 12px',
-              borderLeft: `4px solid ${TYPE_COLORS[node.type || 'process'] || '#94a3b8'}`,
-              background: '#f8fafc',
-              borderRadius: '0 6px 6px 0',
-              marginBottom: 4,
-            }}
-          >
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#64748b', minWidth: 50 }}>
-              {node.id}
-            </span>
-            {node.type && (
-              <span
+      {/* Visual flow */}
+      <div style={{ position: 'relative', paddingLeft: 28 }}>
+        {/* Vertical connector line */}
+        <div
+          style={{
+            position: 'absolute',
+            left: 15,
+            top: 16,
+            bottom: 16,
+            width: 2,
+            background: 'linear-gradient(180deg, rgba(6,182,212,0.3), rgba(59,130,246,0.1))',
+            borderRadius: 1,
+          }}
+        />
+
+        {data.nodes.map((node, i) => {
+          const color = TYPE_COLORS[node.type || 'process'] || '#3b82f6';
+          const shape = TYPE_SHAPES[node.type || 'process'] || '○';
+          const isStart = node.type === 'start';
+          const isEnd = node.type === 'end';
+          const isDecision = node.type === 'decision';
+
+          // Find outgoing edges for this node
+          const outEdges = data.edges.filter((e) => e.from === node.id);
+
+          return (
+            <div
+              key={node.id}
+              className={`q-animate-slide q-stagger-${Math.min(i + 1, 7)}`}
+              style={{ marginBottom: i < data.nodes.length - 1 ? 4 : 0 }}
+            >
+              <div
                 style={{
-                  fontSize: 10,
-                  fontWeight: 600,
-                  padding: '2px 6px',
-                  borderRadius: 4,
-                  background: TYPE_COLORS[node.type] || '#94a3b8',
-                  color: '#fff',
-                  textTransform: 'uppercase',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 14,
+                  padding: '12px 16px',
+                  background: isDecision
+                    ? 'rgba(245,158,11,0.04)'
+                    : isStart || isEnd
+                      ? `${color}08`
+                      : 'rgba(15,23,42,0.3)',
+                  border: `1px solid ${color}20`,
+                  borderRadius: 10,
+                  position: 'relative',
+                  transition: 'background 200ms, border-color 200ms',
                 }}
               >
-                {node.type}
-              </span>
-            )}
-            <span style={{ color: '#334155', fontSize: 14 }}>{node.label}</span>
+                {/* Node dot on the connector line */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: -21,
+                    top: '50%',
+                    width: 12,
+                    height: 12,
+                    borderRadius: isDecision ? 2 : '50%',
+                    background: color,
+                    border: `2px solid ${color}`,
+                    boxShadow: `0 0 8px ${color}30`,
+                    transform: `translateY(-50%)${isDecision ? ' rotate(45deg)' : ''}`,
+                  }}
+                />
+
+                {/* Shape icon */}
+                <span style={{ fontSize: 14, color, flexShrink: 0, width: 20, textAlign: 'center' }}>
+                  {shape}
+                </span>
+
+                {/* ID badge */}
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    color: '#64748b',
+                    fontFamily: 'var(--q-font-mono)',
+                    minWidth: 32,
+                    flexShrink: 0,
+                  }}
+                >
+                  {node.id}
+                </span>
+
+                {/* Type badge */}
+                {node.type && (
+                  <span
+                    style={{
+                      fontSize: 9,
+                      fontWeight: 700,
+                      padding: '2px 7px',
+                      borderRadius: 4,
+                      background: `${color}15`,
+                      color,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.06em',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {node.type}
+                  </span>
+                )}
+
+                {/* Label */}
+                <span style={{ color: '#cbd5e1', fontSize: 13, fontWeight: 500 }}>
+                  {node.label}
+                </span>
+              </div>
+
+              {/* Edge labels */}
+              {outEdges.length > 0 && (
+                <div style={{ paddingLeft: 10, paddingTop: 2, paddingBottom: 2 }}>
+                  {outEdges.map((edge, ei) => (
+                    <div
+                      key={ei}
+                      style={{
+                        fontSize: 11,
+                        color: '#64748b',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        paddingLeft: 20,
+                      }}
+                    >
+                      <span style={{ color: '#475569', fontSize: 10 }}>↓</span>
+                      <span style={{ fontFamily: 'var(--q-font-mono)', fontSize: 10 }}>
+                        → {edge.to}
+                      </span>
+                      {edge.label && (
+                        <span
+                          style={{
+                            fontSize: 10,
+                            color: '#94a3b8',
+                            fontStyle: 'italic',
+                          }}
+                        >
+                          ({edge.label})
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Legend */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 16,
+          marginTop: 24,
+          paddingTop: 16,
+          borderTop: '1px solid rgba(51,65,85,0.2)',
+          flexWrap: 'wrap',
+        }}
+      >
+        {Object.entries(TYPE_COLORS).map(([type, color]) => (
+          <div key={type} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: type === 'decision' ? 1 : '50%',
+                background: color,
+                transform: type === 'decision' ? 'rotate(45deg)' : undefined,
+              }}
+            />
+            <span
+              style={{
+                fontSize: 10,
+                color: '#64748b',
+                textTransform: 'capitalize',
+                fontWeight: 500,
+              }}
+            >
+              {type}
+            </span>
           </div>
         ))}
       </div>
-
-      {data.edges.length > 0 && (
-        <div>
-          <h4 style={{ margin: '0 0 8px', color: '#1e293b' }}>Transitions</h4>
-          {data.edges.map((edge, i) => (
-            <div key={i} style={{ fontSize: 13, color: '#64748b', marginBottom: 4 }}>
-              {edge.from} → {edge.to}
-              {edge.label ? ` (${edge.label})` : ''}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
