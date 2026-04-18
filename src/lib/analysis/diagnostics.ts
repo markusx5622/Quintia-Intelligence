@@ -8,6 +8,7 @@ interface DiagnosticRule {
   keywords: string[];
   title: string;
   baseSeverity: DiagnosticIssue['severity'];
+  /** Template with {matches} placeholder replaced by actual matched keywords */
   evidenceTemplate: string;
 }
 
@@ -16,73 +17,79 @@ const RULES: DiagnosticRule[] = [
     keywords: ['manual', 'manually', 'by hand'],
     title: 'Manual processing detected',
     baseSeverity: 'medium',
-    evidenceTemplate: 'The narrative references manual processing, which is error-prone and slow.',
+    evidenceTemplate: 'The narrative references manual processing ({matches}), indicating error-prone and slow operations that are candidates for automation.',
   },
   {
-    keywords: ['delay', 'delayed', 'slow', 'lag', 'waiting'],
+    keywords: ['delay', 'delayed', 'slow', 'lag', 'waiting', 'causes delays'],
     title: 'Process delays identified',
     baseSeverity: 'high',
-    evidenceTemplate: 'The narrative references delays or slow processing, indicating throughput issues.',
+    evidenceTemplate: 'Delay indicators found ({matches}), suggesting throughput constraints that directly extend cycle times.',
   },
   {
     keywords: ['approval', 'approve', 'sign-off', 'authorization'],
     title: 'Approval bottleneck risk',
     baseSeverity: 'medium',
-    evidenceTemplate: 'Approval gates may cause queuing and throughput reduction.',
+    evidenceTemplate: 'Approval steps ({matches}) create sequential gates that may cause queuing when approvers are unavailable.',
   },
   {
     keywords: ['escalation', 'escalate', 'escalated'],
     title: 'Escalation path complexity',
     baseSeverity: 'high',
-    evidenceTemplate: 'Escalation paths add latency and may indicate unclear initial handling.',
+    evidenceTemplate: 'Escalation references ({matches}) indicate multi-tier routing that adds latency and may signal unclear initial handling criteria.',
   },
   {
     keywords: ['rework', 'redo', 'correction', 'fix', 'error'],
     title: 'Rework and error loops',
     baseSeverity: 'high',
-    evidenceTemplate: 'Rework loops indicate quality issues in upstream stages.',
+    evidenceTemplate: 'Rework indicators ({matches}) suggest quality defects in earlier stages that cascade into repeated effort downstream.',
   },
   {
     keywords: ['backlog', 'queue', 'pile', 'accumulate'],
     title: 'Work backlog accumulation',
     baseSeverity: 'critical',
-    evidenceTemplate: 'Backlogs indicate capacity/demand mismatch.',
+    evidenceTemplate: 'Backlog references ({matches}) indicate sustained demand/capacity mismatch requiring workload redistribution.',
   },
   {
     keywords: ['handoff', 'hand-off', 'transfer', 'forward'],
     title: 'Excessive handoffs',
     baseSeverity: 'medium',
-    evidenceTemplate: 'Multiple handoffs increase cycle time and information loss risk.',
+    evidenceTemplate: 'Handoff references ({matches}) indicate information passes between teams, increasing cycle time and risk of context loss.',
   },
   {
-    keywords: ['duplicate', 'redundant', 'twice', 'again'],
+    keywords: ['duplicate', 'duplicated', 'redundant', 'twice', 'again', 'duplicated work'],
     title: 'Duplicate effort detected',
     baseSeverity: 'medium',
-    evidenceTemplate: 'Duplicate activities waste resources and suggest process fragmentation.',
+    evidenceTemplate: 'Duplication indicators ({matches}) point to repeated activities across teams, wasting effort and suggesting process fragmentation.',
   },
   {
-    keywords: ['email', 'spreadsheet', 'excel', 'paper'],
+    keywords: ['email', 'spreadsheet', 'excel', 'paper', 'shared inbox'],
     title: 'Informal tooling reliance',
     baseSeverity: 'low',
-    evidenceTemplate: 'Reliance on email/spreadsheets indicates lack of structured workflow tooling.',
+    evidenceTemplate: 'Informal tools ({matches}) are used for process coordination, lacking audit trails and structured workflow enforcement.',
   },
   {
-    keywords: ['overdue', 'missed deadline', 'sla', 'breach'],
+    keywords: ['overdue', 'missed deadline', 'sla', 'breach', 'missed sla'],
     title: 'SLA / deadline risk',
     baseSeverity: 'critical',
-    evidenceTemplate: 'References to overdue items or SLA breaches indicate chronic timing failures.',
+    evidenceTemplate: 'SLA/deadline concerns ({matches}) indicate chronic timing failures that expose the organization to service-level penalties.',
   },
   {
     keywords: ['exception', 'special case', 'workaround'],
     title: 'Exception handling overhead',
     baseSeverity: 'medium',
-    evidenceTemplate: 'Frequent exceptions suggest the standard process does not cover real needs.',
+    evidenceTemplate: 'Exception indicators ({matches}) suggest the standard process does not cover real operational scenarios.',
   },
   {
-    keywords: ['no visibility', 'unclear', 'unknown status', 'lack of tracking'],
-    title: 'Lack of process visibility',
+    keywords: ['no visibility', 'unclear', 'unknown status', 'lack of tracking', 'unclear ownership', 'incomplete'],
+    title: 'Lack of process visibility and ownership',
     baseSeverity: 'high',
-    evidenceTemplate: 'Inability to track work status leads to delays and duplicate effort.',
+    evidenceTemplate: 'Visibility gaps ({matches}) prevent stakeholders from tracking work status, leading to reactive management and ownership ambiguity.',
+  },
+  {
+    keywords: ['unclear ownership', 'no owner', 'ownership after'],
+    title: 'Ownership ambiguity after handoff',
+    baseSeverity: 'high',
+    evidenceTemplate: 'Ownership concerns ({matches}) indicate that responsibility is not clearly assigned after key transitions, causing work to stall or be duplicated.',
   },
 ];
 
@@ -100,6 +107,16 @@ function escalateSeverity(
 }
 
 // ---------------------------------------------------------------------------
+// Evidence generation from matched keywords
+// ---------------------------------------------------------------------------
+
+function buildEvidence(template: string, matchedKeywords: string[]): string {
+  const uniqueMatches = Array.from(new Set(matchedKeywords));
+  const matchText = uniqueMatches.map((kw) => `"${kw}"`).join(', ');
+  return template.replace('{matches}', matchText);
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -109,18 +126,27 @@ export function runDiagnostics(
 ): DiagnosticsOutput {
   const lower = narrative.toLowerCase();
   const issues: DiagnosticIssue[] = [];
+  const seenTitles = new Set<string>();
 
   for (const rule of RULES) {
-    const matchCount = rule.keywords.reduce(
-      (count, kw) => count + (lower.split(kw.toLowerCase()).length - 1),
-      0,
-    );
+    const matched: string[] = [];
+    let matchCount = 0;
 
-    if (matchCount > 0) {
+    for (const kw of rule.keywords) {
+      const kwLower = kw.toLowerCase();
+      const occurrences = lower.split(kwLower).length - 1;
+      if (occurrences > 0) {
+        matchCount += occurrences;
+        matched.push(kw);
+      }
+    }
+
+    if (matchCount > 0 && !seenTitles.has(rule.title)) {
+      seenTitles.add(rule.title);
       issues.push({
         title: rule.title,
         severity: escalateSeverity(rule.baseSeverity, matchCount),
-        evidence: rule.evidenceTemplate,
+        evidence: buildEvidence(rule.evidenceTemplate, matched),
       });
     }
   }
@@ -132,9 +158,14 @@ export function runDiagnostics(
     }
   }
 
+  const counts = { critical: 0, high: 0, medium: 0, low: 0 };
+  for (const issue of issues) {
+    counts[issue.severity]++;
+  }
+
   const summary =
     issues.length > 0
-      ? `Identified ${issues.length} diagnostic issue(s): ${issues.filter((i) => i.severity === 'critical').length} critical, ${issues.filter((i) => i.severity === 'high').length} high, ${issues.filter((i) => i.severity === 'medium').length} medium, ${issues.filter((i) => i.severity === 'low').length} low.`
+      ? `Identified ${issues.length} diagnostic issue(s): ${counts.critical} critical, ${counts.high} high, ${counts.medium} medium, ${counts.low} low.`
       : 'No significant issues detected in the process narrative.';
 
   return { issues, summary };

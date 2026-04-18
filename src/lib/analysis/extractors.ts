@@ -11,6 +11,9 @@ const ROLE_KEYWORDS = [
   'representative', 'technician', 'operator', 'team lead', 'vp',
   'vice president', 'cfo', 'cto', 'ceo', 'chief', 'head of',
   'support agent', 'procurement officer', 'project manager',
+  'service desk analyst', 'incident manager', 'security team',
+  'infrastructure team', 'network engineer', 'security analyst',
+  'helpdesk agent', 'it support', 'on-call engineer',
 ];
 
 const SYSTEM_KEYWORDS = [
@@ -19,6 +22,7 @@ const SYSTEM_KEYWORDS = [
   'software', 'application', 'tool', 'excel', 'spreadsheet', 'dashboard',
   'api', 'integration', 'workflow engine', 'ticketing system',
   'inventory system', 'billing system', 'helpdesk', 'intranet',
+  'shared inbox', 'monitoring system', 'itsm', 'cmdb',
 ];
 
 const ARTIFACT_KEYWORDS = [
@@ -26,7 +30,8 @@ const ARTIFACT_KEYWORDS = [
   'purchase order', 'ticket', 'contract', 'proposal', 'specification',
   'approval', 'notification', 'email', 'record', 'log', 'certificate',
   'memo', 'template', 'checklist', 'schedule', 'budget', 'quote',
-  'complaint', 'incident report', 'change request',
+  'complaint', 'incident report', 'change request', 'incident',
+  'severity', 'sla', 'runbook', 'knowledge base article',
 ];
 
 const BOTTLENECK_KEYWORDS = [
@@ -34,6 +39,8 @@ const BOTTLENECK_KEYWORDS = [
   'approval', 'escalation', 'rework', 'error', 'exception', 'reject',
   'overdue', 'stuck', 'blocked', 'pending', 'handoff', 'hand-off',
   'queue', 'lag', 'overtime', 'missed deadline', 'duplicate',
+  'unclear ownership', 'incomplete', 'missed sla', 'duplicated work',
+  'unclear', 'lack of tracking', 'no visibility',
 ];
 
 // ---------------------------------------------------------------------------

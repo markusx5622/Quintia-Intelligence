@@ -4,6 +4,8 @@ const TYPE_COLORS: Record<string, string> = {
   start: '#22c55e',
   end: '#ef4444',
   decision: '#f59e0b',
+  review: '#8b5cf6',
+  escalation: '#ec4899',
   process: '#3b82f6',
 };
 
