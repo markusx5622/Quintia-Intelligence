@@ -159,12 +159,22 @@ export default function EvidencePanel({
   selection: SelectionState;
   onSelectIssue: (id: string) => void;
 }) {
-  if (issues.length === 0) return null;
+  if (issues.length === 0) {
+    return (
+      <div className="q-empty-state-refined q-animate-in">
+        <div className="q-empty-state-refined-icon">🔍</div>
+        <div className="q-empty-state-refined-title">No diagnostics detected</div>
+        <div className="q-empty-state-refined-desc">
+          The analysis did not identify any process issues in the provided narrative.
+        </div>
+      </div>
+    );
+  }
 
   const hasSelection = selection.type !== null;
 
   // Summary badges
-  const counts = { critical: 0, high: 0, medium: 0, low: 0 };
+  const counts: Record<string, number> = { critical: 0, high: 0, medium: 0, low: 0 };
   for (const issue of issues) {
     counts[issue.severity]++;
   }
@@ -182,6 +192,9 @@ export default function EvidencePanel({
             </span>
           );
         })}
+        <span className="q-badge q-badge-neutral" style={{ fontSize: 10 }}>
+          {issues.length} total
+        </span>
       </div>
 
       {/* Issue cards */}

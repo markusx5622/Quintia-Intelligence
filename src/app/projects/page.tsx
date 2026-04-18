@@ -8,49 +8,57 @@ export default async function ProjectsPage() {
   const projects = await storage.listProjects();
 
   return (
-    <div>
+    <div className="q-page-content-enter">
       <div className="q-page-header">
         <div className="q-page-header-left">
           <h1 className="q-page-title">Projects</h1>
-          <span className="q-page-subtitle">{projects.length} project{projects.length !== 1 ? 's' : ''} created</span>
+          <span className="q-page-subtitle">
+            {projects.length === 0
+              ? 'No analyses created yet'
+              : `${projects.length} analysis project${projects.length !== 1 ? 's' : ''}`}
+          </span>
         </div>
         <Link href="/projects/new" className="q-btn q-btn-primary">
-          + New Project
+          + New Analysis
         </Link>
       </div>
 
       {projects.length === 0 ? (
-        <div className="q-empty-state">
-          <div className="q-empty-state-icon">📂</div>
-          <p style={{ fontSize: 16, fontWeight: 500, color: 'var(--q-white)', marginBottom: 8 }}>
-            No projects yet
-          </p>
-          <p style={{ fontSize: 14, color: 'var(--q-slate-400)', marginBottom: 20 }}>
-            Create your first project to begin process analysis.
-          </p>
-          <Link href="/projects/new" className="q-btn q-btn-primary">
-            Start New Analysis
+        <div className="q-empty-state-refined q-animate-in">
+          <div className="q-empty-state-refined-icon">📂</div>
+          <div className="q-empty-state-refined-title">No projects yet</div>
+          <div className="q-empty-state-refined-desc">
+            Create your first analysis project to begin extracting structured
+            process intelligence from operational narratives.
+          </div>
+          <Link href="/projects/new" className="q-btn q-btn-primary" style={{ fontSize: 14 }}>
+            Start Your First Analysis
           </Link>
         </div>
       ) : (
         <div>
-          {projects.map((p) => (
-            <Link key={p.id} href={`/projects/${p.id}`} className="q-project-card">
+          {projects.map((project, i) => (
+            <Link
+              key={project.id}
+              href={`/projects/${project.id}`}
+              className={`q-project-card q-animate-in q-stagger-${Math.min(i + 1, 6)}`}
+            >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--q-white)', marginBottom: 4 }}>
-                    {p.name}
+                    {project.name}
                   </div>
-                  {p.description && (
-                    <div style={{ fontSize: 13, color: 'var(--q-slate-400)', marginBottom: 6 }}>
-                      {p.description}
+                  {project.description && (
+                    <div style={{ fontSize: 13, color: 'var(--q-slate-400)', marginBottom: 6, lineHeight: 1.5 }}>
+                      {project.description}
                     </div>
                   )}
                 </div>
-                <span style={{ fontSize: 18, color: 'var(--q-slate-500)' }}>›</span>
+                <span style={{ fontSize: 18, color: 'var(--q-slate-500)', flexShrink: 0, marginLeft: 12 }} aria-hidden="true">›</span>
               </div>
-              <div style={{ fontSize: 12, color: 'var(--q-slate-400)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span>📅</span> Created {new Date(p.createdAt).toLocaleDateString()}
+              <div style={{ fontSize: 12, color: 'var(--q-slate-500)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span aria-hidden="true">📅</span>
+                <span>Created {new Date(project.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
               </div>
             </Link>
           ))}

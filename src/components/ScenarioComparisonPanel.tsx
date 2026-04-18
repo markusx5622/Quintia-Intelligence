@@ -2,7 +2,7 @@ import type { ScenarioComparison, SelectionState } from '@/src/lib/types/view-mo
 import type { DeterministicFinancialOutput } from '@/src/lib/types/contracts';
 
 function formatEUR(value: number): string {
-  return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
+  return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(value);
 }
 
 const DIFFICULTY_META: Record<string, { color: string; bg: string; label: string }> = {
@@ -155,7 +155,17 @@ export default function ScenarioComparisonPanel({
   selection: SelectionState;
   onSelectScenario: (id: string) => void;
 }) {
-  if (scenarios.length === 0) return null;
+  if (scenarios.length === 0) {
+    return (
+      <div className="q-empty-state-refined q-animate-in">
+        <div className="q-empty-state-refined-icon">📊</div>
+        <div className="q-empty-state-refined-title">No scenarios generated</div>
+        <div className="q-empty-state-refined-desc">
+          The analysis did not generate intervention scenarios for this process.
+        </div>
+      </div>
+    );
+  }
 
   const hasSelection = selection.type !== null;
 

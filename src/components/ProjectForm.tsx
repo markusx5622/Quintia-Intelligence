@@ -11,6 +11,9 @@ export default function ProjectForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const narrativeLength = narrative.trim().length;
+  const isNarrativeShort = narrativeLength > 0 && narrativeLength < 100;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -38,9 +41,9 @@ export default function ProjectForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 680 }}>
+    <form onSubmit={handleSubmit} style={{ maxWidth: 680 }} className="q-animate-in">
       {error && (
-        <div className="q-error-banner" style={{ marginBottom: 20 }}>
+        <div className="q-error-banner" role="alert" style={{ marginBottom: 20 }}>
           ⚠ {error}
         </div>
       )}
@@ -59,6 +62,7 @@ export default function ProjectForm() {
               required
               placeholder="e.g. Procurement Approval Process"
               className="q-input"
+              autoComplete="off"
             />
           </div>
 
@@ -71,9 +75,12 @@ export default function ProjectForm() {
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Optional short description"
+              placeholder="Brief description of the process being analyzed"
               className="q-input"
             />
+            <div style={{ fontSize: 11, color: 'var(--q-slate-500)', marginTop: 6 }}>
+              Optional — helps identify this project later.
+            </div>
           </div>
 
           <div>
@@ -85,24 +92,57 @@ export default function ProjectForm() {
               value={narrative}
               onChange={(e) => setNarrative(e.target.value)}
               required
-              rows={10}
-              placeholder="Describe your operational process in detail. Include roles, systems, steps, handoffs, pain points..."
+              rows={12}
+              placeholder="Describe your operational process in detail. Include roles involved, systems used, process steps, handoffs between teams, decision points, pain points, and any known bottlenecks..."
               className="q-textarea"
             />
-            <div style={{ fontSize: 12, color: 'var(--q-slate-500)', marginTop: 6 }}>
-              The more detail you provide, the richer the analysis output.
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6 }}>
+              <div style={{ fontSize: 11, color: 'var(--q-slate-500)', lineHeight: 1.5 }}>
+                Provide detailed narratives for richer analysis. Include roles, systems, steps, and pain points.
+              </div>
+              {narrativeLength > 0 && (
+                <span style={{
+                  fontSize: 11,
+                  fontFamily: 'var(--q-font-mono)',
+                  color: isNarrativeShort ? 'var(--q-warning-400)' : 'var(--q-slate-500)',
+                  flexShrink: 0,
+                  marginLeft: 12,
+                }}>
+                  {narrativeLength} chars
+                </span>
+              )}
             </div>
+            {isNarrativeShort && (
+              <div style={{ fontSize: 11, color: 'var(--q-warning-400)', marginTop: 4 }}>
+                Short narratives produce limited analysis. Consider adding more process detail.
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="q-btn q-btn-primary"
-      >
-        {loading ? 'Creating...' : '⚡ Create Project & Analyse'}
-      </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <button
+          type="submit"
+          disabled={loading}
+          className="q-btn q-btn-primary"
+          style={{ minWidth: 200 }}
+        >
+          {loading ? (
+            <>
+              <span className="q-loading-spinner" style={{ width: 14, height: 14, borderWidth: '1.5px' }} />
+              Creating Analysis...
+            </>
+          ) : (
+            'Create & Analyze'
+          )}
+        </button>
+        {!loading && (
+          <span style={{ fontSize: 12, color: 'var(--q-slate-500)' }}>
+            Pipeline will begin automatically after creation
+          </span>
+        )}
+      </div>
     </form>
   );
 }
