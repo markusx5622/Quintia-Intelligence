@@ -85,7 +85,7 @@ The full 7-stage pipeline is in scope for v1:
 
 | Dependency | Version Policy |
 |---|---|
-| Next.js | Latest stable (14+) |
+| Next.js | Latest stable (16+) |
 | TypeScript | Latest stable (5+) |
 | Prisma | Latest stable |
 | Vitest | Latest stable |

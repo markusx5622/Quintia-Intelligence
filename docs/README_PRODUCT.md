@@ -38,7 +38,7 @@ Each stage has typed input/output contracts. See [PIPELINE_CONTRACTS.md](./PIPEL
 
 | Layer | Technology |
 |---|---|
-| Frontend / API | Next.js 14+ (App Router) |
+| Frontend / API | Next.js 16+ (App Router) |
 | Language | TypeScript (strict mode) |
 | Hosting | Vercel (serverless) |
 | Storage (dev) | In-memory adapter |
